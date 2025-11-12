@@ -5,7 +5,7 @@ export default function Mainlayout({ children }: { children: React.ReactNode }) 
     <>
       <Header />
       <div className="flex justify-center px-4">
-        <main className="flex w-full max-w-[600px]">{children}</main>
+        <main className="flex w-full max-w-[900px]">{children}</main>
       </div>
     </>
   );
