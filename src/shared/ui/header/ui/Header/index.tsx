@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { HEADER_NAV } from '../../config/navigation';
 import Bell from '@/shared/asset/svg/Bell';
 
 export default function Header() {
@@ -10,12 +9,7 @@ export default function Header() {
           GSMC
         </Link>
 
-        <nav className="flex items-center gap-8 text-sm">
-          {HEADER_NAV.map((item) => (
-            <Link key={item.path} className="text-gray-500" href={item.path}>
-              {item.label}
-            </Link>
-          ))}
+        <nav className="flex mx-17 w-full justify-end items-center gap-8 text-sm">
           <button className="font-semibold text-gray-900">로그아웃</button>
         </nav>
 
