@@ -34,5 +34,5 @@ export default function MemberView() {
         </p>
       </div>
     </div>
-  )
+  );
 }
