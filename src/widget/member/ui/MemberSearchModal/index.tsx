@@ -5,7 +5,7 @@ import NumberButton from '@/shared/ui/NumberButton';
 export default function MemberSearchModal() {
   return (
     <ModalWrapper className="box-border h-187.5 w-87.5 px-9 py-6">
-      <h2 className="text-main-700 mt-4 mb-8 text-2xl font-bold">학생찾기</h2>
+      <h2 className="text-main-700 mt-3 mb-8 text-2xl font-bold">학생찾기</h2>
       <div className="mb-8">
         <div className="relative">
           <input
