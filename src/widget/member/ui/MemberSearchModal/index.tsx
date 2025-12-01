@@ -4,7 +4,7 @@ import ModalWrapper from '@/shared/ui/ModalWrapper';
 export default function MemberSearchModal() {
   return (
     <ModalWrapper className="box-border h-187.5 w-87.5 px-6 py-9">
-      <h2 className="mb-8 text-2xl font-bold text-[#385B97]">학생찾기</h2>
+      <h2 className="text-main-700 mb-8 text-2xl font-bold">학생찾기</h2>
       <div className="mb-8">
         <div className="relative">
           <input
