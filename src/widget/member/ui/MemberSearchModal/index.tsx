@@ -4,7 +4,7 @@ import NumberButton from '@/shared/ui/NumberButton';
 
 export default function MemberSearchModal() {
   return (
-    <ModalWrapper className="box-border h-187.5 w-87.5 px-9 py-6">
+    <ModalWrapper className="box-border flex h-187.5 w-87.5 flex-col px-9 py-6">
       <h2 className="text-main-700 mt-3 mb-8 text-2xl font-bold">학생찾기</h2>
       <div className="mb-8">
         <div className="relative">
@@ -35,15 +35,15 @@ export default function MemberSearchModal() {
             ))}
           </div>
         </div>
+      </div>
 
-        <div className="flex flex-col gap-3">
-          <button className="border-main-500 text-main-500 h-13 w-full rounded-lg border bg-white py-3 font-bold">
-            뒤로가기
-          </button>
-          <button className="bg-main-500 h-13 w-full cursor-pointer rounded-lg py-3 font-bold text-white">
-            적용하기
-          </button>
-        </div>
+      <div className="mt-auto flex flex-col gap-3">
+        <button className="border-main-500 text-main-500 h-13 w-full rounded-lg border bg-white py-3 font-bold">
+          뒤로가기
+        </button>
+        <button className="bg-main-500 h-13 w-full cursor-pointer rounded-lg py-3 font-bold text-white">
+          적용하기
+        </button>
       </div>
     </ModalWrapper>
   );
