@@ -17,15 +17,29 @@ export default function MemberSearchModal() {
           </div>
         </div>
 
-        <div className="mt-6">
+        <div className="mt-12">
           <p className="text-main-700 mb-3 text-lg font-bold">학년</p>
-          <div className="flex justify-center gap-6">
+          <div className="flex gap-7">
             {[1, 2, 3].map((grade) => (
               <button
                 key={grade}
-                className="border-main-500 text-main-500 w-20 rounded-lg border px-6 py-3 text-lg font-bold"
+                className="border-main-500 text-main-500 w-21 cursor-pointer rounded-xl border px-6 py-3 text-lg font-bold"
               >
                 {grade}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-9">
+          <p className="text-main-700 mb-3 text-lg font-bold">반</p>
+          <div className="grid grid-cols-3 gap-6">
+            {[1, 2, 3, 4].map((classNum) => (
+              <button
+                key={classNum}
+                className="border-main-500 text-main-500 w-21 cursor-pointer rounded-xl border px-6 py-3 text-lg font-bold"
+              >
+                {classNum}
               </button>
             ))}
           </div>
