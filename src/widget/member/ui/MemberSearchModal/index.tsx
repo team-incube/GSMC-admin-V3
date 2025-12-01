@@ -37,7 +37,10 @@ export default function MemberSearchModal() {
         </div>
 
         <div className="flex flex-col gap-3">
-          <button className="bg-main-500 h-13 w-full cursor-pointer rounded-lg py-3 font-bold text-white focus:outline-none">
+          <button className="border-main-500 text-main-500 h-13 w-full rounded-lg border bg-white py-3 font-bold">
+            뒤로가기
+          </button>
+          <button className="bg-main-500 h-13 w-full cursor-pointer rounded-lg py-3 font-bold text-white">
             적용하기
           </button>
         </div>
