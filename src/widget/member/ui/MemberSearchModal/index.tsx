@@ -38,7 +38,7 @@ export default function MemberSearchModal() {
       </div>
 
       <div className="mt-auto flex flex-col gap-3">
-        <button className="border-main-500 text-main-500 h-13 w-full rounded-lg border bg-white py-3 font-bold">
+        <button className="border-main-500 text-main-500 h-13 w-full cursor-pointer rounded-lg border bg-white py-3 font-bold">
           뒤로가기
         </button>
         <button className="bg-main-500 h-13 w-full cursor-pointer rounded-lg py-3 font-bold text-white">
