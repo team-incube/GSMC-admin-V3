@@ -1,5 +1,6 @@
 import Search from '@/shared/asset/svg/Search';
 import ModalWrapper from '@/shared/ui/ModalWrapper';
+import NumberButton from '@/shared/ui/NumberButton';
 
 export default function MemberSearchModal() {
   return (
@@ -21,12 +22,7 @@ export default function MemberSearchModal() {
           <p className="text-main-700 mb-3 text-lg font-bold">학년</p>
           <div className="flex gap-5">
             {[1, 2, 3].map((grade) => (
-              <button
-                key={grade}
-                className="border-main-500 text-main-500 w-20 cursor-pointer rounded-xl border px-6 py-3 text-lg font-bold"
-              >
-                {grade}
-              </button>
+              <NumberButton key={grade} value={grade} />
             ))}
           </div>
         </div>
@@ -35,12 +31,7 @@ export default function MemberSearchModal() {
           <p className="text-main-700 mb-3 text-lg font-bold">반</p>
           <div className="grid grid-cols-3 gap-5">
             {[1, 2, 3, 4].map((classNum) => (
-              <button
-                key={classNum}
-                className="border-main-500 text-main-500 w-20 cursor-pointer rounded-xl border px-6 py-3 text-lg font-bold"
-              >
-                {classNum}
-              </button>
+              <NumberButton key={classNum} value={classNum} />
             ))}
           </div>
         </div>
