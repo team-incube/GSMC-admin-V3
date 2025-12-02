@@ -34,9 +34,9 @@ export default function MemberSearchModal({ isOpen, onClose, onSearch }: MemberS
   };
 
   return (
-    <ModalWrapper className="box-border flex h-151 w-110 flex-col px-15 py-10">
+    <ModalWrapper className="box-border flex w-110.5 flex-col px-15 py-10">
       <h2 className="text-main-700 mb-3 text-2xl font-bold">학생찾기</h2>
-      <div className="mb-6">
+      <div className="mb-7.5">
         <div className="relative">
           <input
             type="text"
@@ -50,7 +50,7 @@ export default function MemberSearchModal({ isOpen, onClose, onSearch }: MemberS
           </div>
         </div>
 
-        <div className="mt-8">
+        <div className="mt-7.5">
           <p className="text-main-700 mb-3 text-lg font-bold">학년</p>
           <div className="flex gap-5">
             {[1, 2, 3].map((grade) => (
@@ -72,13 +72,13 @@ export default function MemberSearchModal({ isOpen, onClose, onSearch }: MemberS
       <div className="mt-auto flex flex-col gap-3">
         <button
           onClick={handleReset}
-          className="border-main-500 text-main-500 h-13 w-full cursor-pointer rounded-lg border bg-white py-3 font-bold"
+          className="border-main-500 text-main-500 h-13 w-full cursor-pointer rounded-lg border bg-white px-5.5 py-3 font-bold"
         >
           뒤로가기
         </button>
         <button
           onClick={handleSubmit}
-          className="bg-main-500 h-13 w-full cursor-pointer rounded-lg py-3 font-bold text-white"
+          className="bg-main-500 h-13 w-full cursor-pointer rounded-lg px-5.5 py-3 font-bold text-white"
         >
           적용하기
         </button>
