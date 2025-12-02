@@ -1,9 +1,13 @@
 import Filter from '@/shared/asset/svg/Filter';
 import { getMembers } from '@/feature/member/api/getMembers';
+import { Member } from '@/feature/member/api/member';
 import QuestionMark from '@/shared/asset/svg/QuestionMark';
 import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 
 export default function MemberView() {
+  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+
   const {
     data: members = [],
     isLoading,
@@ -33,19 +37,31 @@ export default function MemberView() {
       <div className="bg-main-100 flex h-184.75 w-143.25 flex-col overflow-hidden rounded-2xl">
         <div className="flex items-center justify-between px-10 pt-9 pb-6">
           <div className="flex items-baseline gap-1">
-            <p className="text-main-700 text-2xl font-semibold">216</p>
+            <p className="text-main-700 text-2xl font-semibold">{members.length}</p>
             <p className="text-base font-semibold text-black">명</p>
           </div>
           <Filter />
         </div>
 
         <div className="flex flex-1 flex-col gap-0 overflow-y-auto px-5.5">
-          <article className="bg-main-100 flex flex-col rounded-xl">
-            <div className="flex items-center justify-between rounded-xl px-8 py-6">
-              <p className="text-lg font-semibold text-gray-600">모태환</p>
-              <p className="text-lg font-semibold text-gray-600">2104</p>
-            </div>
-          </article>
+          {members.map((member) => (
+            <article
+              key={member.id}
+              onClick={() => setSelectedMember(member)}
+              className="flex cursor-pointer flex-col rounded-xl"
+            >
+              <div className="flex items-center justify-between px-8 py-6">
+                <div className="flex items-center">
+                  <p className="text-lg font-semibold text-gray-600">{member.name}</p>
+                </div>
+                <p className="text-lg font-semibold text-gray-600">
+                  {member.grade}
+                  {member.classNumber}
+                  {String(member.number).padStart(2, '0')}
+                </p>
+              </div>
+            </article>
+          ))}
         </div>
       </div>
 
