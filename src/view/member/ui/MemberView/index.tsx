@@ -1,3 +1,5 @@
+'use client';
+
 import Filter from '@/shared/asset/svg/Filter';
 import { getMembers } from '@/feature/member/api/getMembers';
 import { Member } from '@/feature/member/api/member';
@@ -66,8 +68,32 @@ export default function MemberView() {
       </div>
 
       <div className="bg-main-100 flex h-184.75 w-87.5 flex-col items-center justify-center overflow-hidden rounded-2xl">
-        <QuestionMark />
-        <p className="mt-8 text-center text-2xl font-semibold text-gray-600">학생을 선택해주세요</p>
+        {selectedMember ? (
+          <div className="flex h-full flex-col">
+            <h2 className="text-main-700 mb-[56px] text-2xl font-semibold">인적사항</h2>
+
+            <div className="mb-[20px] w-full px-1">
+              <div className="flex flex-col">
+                <p className="mb-[8px] text-lg font-semibold text-gray-600">
+                  {selectedMember.name}
+                </p>
+                <div className="flex w-full items-center justify-between">
+                  <p className="font-semibold text-gray-600">
+                    {selectedMember.grade}학년 {selectedMember.classNumber}반{' '}
+                    {String(selectedMember.number).padStart(2, '0')}번
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="flex h-full flex-col items-center justify-center">
+            <QuestionMark />
+            <p className="mt-8 text-center text-2xl font-semibold text-gray-600">
+              학생을 선택해주세요
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
