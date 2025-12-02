@@ -85,6 +85,12 @@ export default function MemberView() {
                 </div>
               </div>
             </div>
+
+            <div className="mb-[47px] flex h-[281px] w-[272px] flex-col items-center justify-center rounded-xl bg-white">
+              <div className="text-center">
+                <span className="text-main-700 text-4xl font-semibold">2300점</span>
+              </div>
+            </div>
           </div>
         ) : (
           <div className="flex h-full flex-col items-center justify-center">
