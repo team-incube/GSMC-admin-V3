@@ -45,7 +45,7 @@ export default function MemberView() {
           <Filter />
         </div>
 
-        <div className="flex flex-1 flex-col gap-0 overflow-y-auto px-5.5">
+        <div className="flex flex-1 flex-col gap-1 overflow-y-auto px-5.5">
           {members.map((member) => (
             <article
               key={member.id}
@@ -67,7 +67,7 @@ export default function MemberView() {
         </div>
       </div>
 
-      <div className="bg-main-100 flex h-184.75 w-87.5 flex-col items-center justify-center overflow-hidden rounded-2xl">
+      <div className="bg-main-100 flex h-184.75 w-87.5 flex-col justify-center overflow-hidden rounded-2xl px-[39px] pt-[36px] pb-[42px]">
         {selectedMember ? (
           <div className="flex h-full flex-col">
             <h2 className="text-main-700 mb-[56px] text-2xl font-semibold">인적사항</h2>
