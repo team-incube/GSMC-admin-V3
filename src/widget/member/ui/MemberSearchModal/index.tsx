@@ -19,9 +19,7 @@ export default function MemberSearchModal({ isOpen, onClose, onSearch }: MemberS
   if (!isOpen) return null;
 
   const handleReset = () => {
-    setSearchName('');
-    setSelectedGrade(null);
-    setSelectedClass(null);
+    onClose();
   };
 
   const handleSubmit = () => {
