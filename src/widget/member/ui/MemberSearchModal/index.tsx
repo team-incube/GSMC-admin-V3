@@ -36,7 +36,7 @@ export default function MemberSearchModal({ isOpen, onClose, onSearch }: MemberS
   return (
     <ModalWrapper className="box-border flex h-151 w-110 flex-col px-15 py-10">
       <h2 className="text-main-700 mb-3 text-2xl font-bold">학생찾기</h2>
-      <div className="mb-8">
+      <div className="mb-6">
         <div className="relative">
           <input
             type="text"
@@ -50,7 +50,7 @@ export default function MemberSearchModal({ isOpen, onClose, onSearch }: MemberS
           </div>
         </div>
 
-        <div className="mt-12">
+        <div className="mt-8">
           <p className="text-main-700 mb-3 text-lg font-bold">학년</p>
           <div className="flex gap-5">
             {[1, 2, 3].map((grade) => (
@@ -59,7 +59,7 @@ export default function MemberSearchModal({ isOpen, onClose, onSearch }: MemberS
           </div>
         </div>
 
-        <div className="mt-9">
+        <div className="mt-5">
           <p className="text-main-700 mb-3 text-lg font-bold">반</p>
           <div className="grid grid-cols-3 gap-5">
             {[1, 2, 3, 4].map((classNum) => (
