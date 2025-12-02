@@ -54,7 +54,12 @@ export default function MemberSearchModal({ isOpen, onClose, onSearch }: MemberS
           <p className="text-main-700 mb-3 text-lg font-bold">학년</p>
           <div className="flex gap-5">
             {[1, 2, 3].map((grade) => (
-              <NumberButton key={grade} value={grade} />
+              <NumberButton
+                key={grade}
+                value={grade}
+                isSelected={selectedGrade === grade}
+                onClick={() => setSelectedGrade(selectedGrade === grade ? null : grade)}
+              />
             ))}
           </div>
         </div>
@@ -63,7 +68,12 @@ export default function MemberSearchModal({ isOpen, onClose, onSearch }: MemberS
           <p className="text-main-700 mb-3 text-lg font-bold">반</p>
           <div className="grid grid-cols-3 gap-5">
             {[1, 2, 3, 4].map((classNum) => (
-              <NumberButton key={classNum} value={classNum} />
+              <NumberButton
+                key={classNum}
+                value={classNum}
+                isSelected={selectedClass === classNum}
+                onClick={() => setSelectedClass(selectedClass === classNum ? null : classNum)}
+              />
             ))}
           </div>
         </div>
