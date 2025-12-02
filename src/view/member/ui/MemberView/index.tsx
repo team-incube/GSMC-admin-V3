@@ -91,6 +91,18 @@ export default function MemberView() {
                 <span className="text-main-700 text-4xl font-semibold">2300점</span>
               </div>
             </div>
+
+            <div className="flex flex-col items-center gap-[12px]">
+              <button className="border-main-500 text-main-500 h-[52px] w-[272px] rounded-xl border text-lg font-semibold">
+                점수 변경
+              </button>
+              <button className="border-main-500 text-main-500 h-[52px] w-[272px] rounded-xl border text-lg font-semibold">
+                부분 점수 확인
+              </button>
+              <button className="border-main-500 text-main-500 h-[52px] w-[272px] rounded-xl border text-lg font-semibold">
+                심사 요청 확인
+              </button>
+            </div>
           </div>
         ) : (
           <div className="flex h-full flex-col items-center justify-center">
