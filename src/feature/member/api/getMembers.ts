@@ -1,5 +1,5 @@
 import { instance } from '@/shared/lib/axios';
-import { Member } from '@/feature/member/api/member';
+import { Member } from '@/feature/member/model/member';
 
 export const getMembers = async (): Promise<Member[]> => {
   const res = await instance.get('/members/search');

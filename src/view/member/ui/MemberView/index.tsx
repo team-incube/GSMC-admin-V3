@@ -2,7 +2,7 @@
 
 import Filter from '@/shared/asset/svg/Filter';
 import { getMembers } from '@/feature/member/api/getMembers';
-import { Member } from '@/feature/member/api/member';
+import { Member } from '@/feature/member/model/member';
 import QuestionMark from '@/shared/asset/svg/QuestionMark';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
