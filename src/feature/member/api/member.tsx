@@ -3,7 +3,7 @@ export interface Member {
   name: string;
   email: string;
   grade: number;
-  classNumber: 3;
+  classNumber: number;
   number: number;
   role: 'UNAUTHORIZED' | 'STUDENT' | 'TEACHER' | 'ROOT';
 }
