@@ -18,23 +18,22 @@ export default function MemberSearchModal({ isOpen, onClose, onSearch }: MemberS
 
   if (!isOpen) return null;
 
-  const handleReset = () => {
+  const resetAndClose = () => {
     setSearchName('');
     setSelectedGrade(null);
     setSelectedClass(null);
     onClose();
   };
-
+  const handleReset = () => {
+    resetAndClose();
+  };
   const handleSubmit = () => {
     onSearch({
       name: searchName || undefined,
       grade: selectedGrade || undefined,
       classNumber: selectedClass || undefined,
     });
-    setSearchName('');
-    setSelectedGrade(null);
-    setSelectedClass(null);
-    onClose();
+    resetAndClose();
   };
 
   return (
