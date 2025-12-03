@@ -13,23 +13,23 @@ export default function MemberView() {
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
   const [searchParams, setSearchParams] = useState<MemberSearchParams>({
     limit: 20,
-    page: 1,
+    page: 0,
     sortBy: 'ASC',
   });
 
-  const { data, isLoading, error } = useQuery({
+  const { data } = useQuery({
     queryKey: ['members', searchParams],
     queryFn: () => getMemberSearch(searchParams),
   });
 
-  const members = data?.data.members || [];
-  const totalElements = data?.data.totalElements || 0;
+  const members = data?.members || [];
+  const totalElements = data?.totalElements || 0;
 
   const handleSearch = (params: { name?: string; grade?: number; classNumber?: number }) => {
     setSearchParams({
       ...searchParams,
       ...params,
-      page: 1,
+      page: 0,
     });
     setIsModalOpen(false);
   };
@@ -47,7 +47,7 @@ export default function MemberView() {
               onClick={() => {
                 setSearchParams({
                   limit: 20,
-                  page: 1,
+                  page: 0,
                   sortBy: 'ASC',
                 });
                 setIsModalOpen(true);
@@ -60,25 +60,21 @@ export default function MemberView() {
           </div>
 
           <div className="flex-1 overflow-y-auto px-10 pb-6">
-            {isLoading ? (
+            {members.length === 0 ? (
               <div className="flex h-full items-center justify-center">
-                <p className="text-gray-500">로딩 중...</p>
-              </div>
-            ) : members.length === 0 ? (
-              <div className="flex h-full items-center justify-center">
-                <p className="text-gray-500">검색 결과가 없습니다</p>
+                <p className="text-main-700 text-2xl font-bold">조건에 맞는 학생이 없습니다.</p>
               </div>
             ) : (
-              <div className="flex flex-col gap-6">
-                {members.map((member) => (
+              <div className="flex flex-col gap-0">
+                {members.map((member: Member) => (
                   <div
                     key={member.id}
                     onClick={() => setSelectedMember(member)}
-                    className="cursor-pointer px-8 py-6 transition-all"
+                    className="cursor-pointer rounded-xl px-8 py-6"
                   >
                     <div className="flex items-center justify-between">
-                      <p className="text-xl font-medium text-gray-700">{member.name}</p>
-                      <p className="text-xl font-medium text-gray-600">
+                      <p className="text-lg font-semibold text-gray-600">{member.name}</p>
+                      <p className="text-lg font-semibold text-gray-600">
                         {member.grade}
                         {member.classNumber}
                         {String(member.number).padStart(2, '0')}
