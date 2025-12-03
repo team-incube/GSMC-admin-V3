@@ -4,7 +4,7 @@ import type { MemberSearchParams, MemberSearchResponse } from '@/feature/member/
 export const getMemberSearch = async (
   params: MemberSearchParams,
 ): Promise<MemberSearchResponse> => {
-  const response = await instance.get('/api/3v/members/search', {
+  const response = await instance.get('/api/v3/members/search', {
     params,
   });
   return response.data;
