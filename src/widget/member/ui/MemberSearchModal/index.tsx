@@ -36,6 +36,9 @@ export default function MemberSearchModal({ isOpen, onClose, onSearch }: MemberS
     resetAndClose();
   };
 
+  const GRADES = [1, 2, 3];
+  const CLASSES = [1, 2, 3, 4];
+
   return (
     <ModalWrapper className="box-border flex w-110.5 flex-col px-15 py-10">
       <h2 className="text-main-700 mb-3 text-2xl font-bold">학생찾기</h2>
@@ -56,7 +59,7 @@ export default function MemberSearchModal({ isOpen, onClose, onSearch }: MemberS
         <div className="mt-7.5">
           <p className="text-main-700 mb-3 text-lg font-bold">학년</p>
           <div className="flex gap-5">
-            {[1, 2, 3].map((grade) => (
+            {GRADES.map((grade) => (
               <NumberButton
                 key={grade}
                 value={grade}
@@ -70,7 +73,7 @@ export default function MemberSearchModal({ isOpen, onClose, onSearch }: MemberS
         <div className="mt-5">
           <p className="text-main-700 mb-3 text-lg font-bold">반</p>
           <div className="grid grid-cols-3 gap-5">
-            {[1, 2, 3, 4].map((classNum) => (
+            {CLASSES.map((classNum) => (
               <NumberButton
                 key={classNum}
                 value={classNum}
