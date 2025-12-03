@@ -21,12 +21,7 @@ export interface MemberSearchParams {
 }
 
 export interface MemberSearchResponse {
-  status: string;
-  code: number;
-  message: string;
-  data: {
-    totalPages: number;
-    totalElements: number;
-    members: Member[];
-  };
+  totalPages: number;
+  totalElements: number;
+  members: Member[];
 }
