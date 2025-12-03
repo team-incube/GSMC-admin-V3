@@ -5,6 +5,6 @@ export const getMembers = async (): Promise<Member[]> => {
   const res = await instance.get('/members/search');
   const members = res.data?.data?.members;
 
-  if (Array.isArray(members)) return members;
-  return [];
+  if (!Array.isArray(members)) return members;
+  return members.filter((m) => m.role === 'STUDENT');
 };
