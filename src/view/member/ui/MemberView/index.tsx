@@ -50,6 +50,14 @@ export default function MemberView() {
             <article
               key={member.id}
               onClick={() => setSelectedMember(member)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  setSelectedMember(member);
+                }
+              }}
               className="flex cursor-pointer flex-col rounded-xl"
             >
               <div className="flex items-center justify-between px-8 py-6">
