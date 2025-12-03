@@ -19,6 +19,9 @@ export default function MemberSearchModal({ isOpen, onClose, onSearch }: MemberS
   if (!isOpen) return null;
 
   const handleReset = () => {
+    setSearchName('');
+    setSelectedGrade(null);
+    setSelectedClass(null);
     onClose();
   };
 
@@ -28,6 +31,9 @@ export default function MemberSearchModal({ isOpen, onClose, onSearch }: MemberS
       grade: selectedGrade || undefined,
       classNumber: selectedClass || undefined,
     });
+    setSearchName('');
+    setSelectedGrade(null);
+    setSelectedClass(null);
     onClose();
   };
 
