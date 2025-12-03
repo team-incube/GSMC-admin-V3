@@ -45,11 +45,6 @@ export default function MemberView() {
             </div>
             <button
               onClick={() => {
-                setSearchParams({
-                  limit: 20,
-                  page: 0,
-                  sortBy: 'ASC',
-                });
                 setIsModalOpen(true);
               }}
               className="cursor-pointer transition-opacity hover:opacity-70"
