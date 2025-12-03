@@ -3,9 +3,8 @@ import { Member } from '@/feature/member/model/member';
 
 export const getMembers = async (): Promise<Member[]> => {
   const res = await instance.get('/members/search');
+  const members = res.data?.data?.members;
 
-  const data = res.data?.data;
-
-  if (Array.isArray(data)) return data;
+  if (Array.isArray(members)) return members;
   return [];
 };
