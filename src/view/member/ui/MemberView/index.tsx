@@ -20,7 +20,7 @@ export default function MemberView() {
     queryFn: getMembers,
   });
 
-  const { data: totalScore = 0, isLoading: scoreLoading } = useQuery({
+  const { data: totalScore = 0 } = useQuery({
     queryKey: ['totalScore', selectedMember?.id],
     queryFn: () => getTotalScore(selectedMember!.id),
     enabled: !!selectedMember,
