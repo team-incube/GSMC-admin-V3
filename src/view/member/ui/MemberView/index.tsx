@@ -18,6 +18,7 @@ export default function MemberView() {
   } = useQuery({
     queryKey: ['members'],
     queryFn: getMembers,
+    select: (members) => members.filter((m) => m.role === 'STUDENT'),
   });
 
   const { data: totalScore = 0 } = useQuery({
