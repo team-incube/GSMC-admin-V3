@@ -1,7 +1,5 @@
-import MemberView from "@/view/member/ui/MemberView"
+import MemberView from '@/view/member/ui/MemberView';
 
 export default function MemberPage() {
-  return (
-    <MemberView />
-  )
+  return <MemberView />;
 }
