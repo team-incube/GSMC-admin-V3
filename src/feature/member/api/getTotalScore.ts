@@ -6,6 +6,5 @@ export const getTotalScore = async (memberId: number) => {
       includeApproveOnly: true,
     },
   });
-  console.log('총점 API 응답:', res.data);
   return res.data?.data.totalScore ?? 0;
 };
