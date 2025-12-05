@@ -2,11 +2,11 @@
 
 import Filter from '@/shared/asset/svg/Filter';
 import { getMembers } from '@/feature/member/api/getMembers';
+import { getTotalScore } from '@/feature/member/api/getTotalScore';
 import { Member } from '@/feature/member/model/member';
 import QuestionMark from '@/shared/asset/svg/QuestionMark';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { getTotalScore } from '@/feature/member/api/getTotalScore';
 
 export default function MemberView() {
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
