@@ -110,9 +110,7 @@ export default function MemberView() {
 
             <div className="mb-[47px] flex h-[281px] w-[272px] flex-col items-center justify-center rounded-xl bg-white">
               <div className="text-center">
-                <span className="text-main-700 text-4xl font-semibold">
-                  {scoreLoading ? '로딩중...' : `${totalScore}점`}
-                </span>
+                <span className="text-main-700 text-4xl font-semibold">{`${totalScore}점`}</span>
               </div>
             </div>
 
