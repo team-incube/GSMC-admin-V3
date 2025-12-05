@@ -6,6 +6,7 @@ import { Member } from '@/feature/member/model/member';
 import QuestionMark from '@/shared/asset/svg/QuestionMark';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
+import { getTotalScore } from '@/feature/member/api/getTotalScore';
 
 export default function MemberView() {
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
@@ -17,6 +18,12 @@ export default function MemberView() {
   } = useQuery({
     queryKey: ['members'],
     queryFn: getMembers,
+  });
+
+  const { data: totalScore = 0, isLoading: scoreLoading } = useQuery({
+    queryKey: ['totalScore', selectedMember?.id],
+    queryFn: () => getTotalScore(selectedMember!.id),
+    enabled: !!selectedMember,
   });
 
   if (isLoading) {
@@ -103,7 +110,9 @@ export default function MemberView() {
 
             <div className="mb-[47px] flex h-[281px] w-[272px] flex-col items-center justify-center rounded-xl bg-white">
               <div className="text-center">
-                <span className="text-main-700 text-4xl font-semibold">2300점</span>
+                <span className="text-main-700 text-4xl font-semibold">
+                  {scoreLoading ? '로딩중...' : `${totalScore}점`}
+                </span>
               </div>
             </div>
 
