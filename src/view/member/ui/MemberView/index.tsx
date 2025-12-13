@@ -6,6 +6,7 @@ import Filter from '@/shared/asset/svg/Filter';
 import QuestionMark from '@/shared/asset/svg/QuestionMark';
 import MemberSearchModal from '@/widget/member/ui/MemberSearchModal';
 import ScoreDetailModal from '@/widget/member/ui/ScoreDetailModal';
+import PendingScoresModal from '@/widget/member/ui/PendingScoresModal';
 import { getMemberSearch } from '@/feature/member/api/getMemberSearch';
 import type { Member, MemberSearchParams } from '@/feature/member/model/types';
 import { getTotalScore } from '@/feature/member/api/getTotalScore';
@@ -13,6 +14,7 @@ import { getTotalScore } from '@/feature/member/api/getTotalScore';
 export default function MemberView() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isScoreDetailModalOpen, setIsScoreDetailModalOpen] = useState(false);
+  const [isPendingScoresModalOpen, setIsPendingScoresModalOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
   const [searchParams, setSearchParams] = useState<MemberSearchParams>({
     limit: 20,
@@ -148,7 +150,10 @@ export default function MemberView() {
               >
                 부분 점수 확인
               </button>
-              <button className="border-main-500 text-main-500 h-[52px] w-[272px] rounded-xl border text-lg font-semibold">
+              <button
+                onClick={() => setIsPendingScoresModalOpen(true)}
+                className="border-main-500 text-main-500 h-[52px] w-[272px] cursor-pointer rounded-xl border text-lg font-semibold"
+              >
                 심사 요청 확인
               </button>
             </div>
@@ -172,6 +177,12 @@ export default function MemberView() {
       <ScoreDetailModal
         isOpen={isScoreDetailModalOpen}
         onClose={() => setIsScoreDetailModalOpen(false)}
+        memberId={selectedMember?.id ?? null}
+      />
+
+      <PendingScoresModal
+        isOpen={isPendingScoresModalOpen}
+        onClose={() => setIsPendingScoresModalOpen(false)}
         memberId={selectedMember?.id ?? null}
       />
     </div>
