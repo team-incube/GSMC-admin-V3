@@ -1,12 +1,27 @@
 import ChangeButton from '@/shared/ui/ChangeButton';
+import { getScoresByCategory } from '@/feature/member/api/getScoresByCategory';
+import { Member } from '@/feature/member/model/types';
+import { useQuery } from '@tanstack/react-query';
 
 interface ScoreEditProps {
-  academicScore: number;
-  volunteerScore: number;
+  selectedMember: Member;
   onClose: () => void;
 }
 
-export default function ScoreEdit({ academicScore, volunteerScore, onClose }: ScoreEditProps) {
+export default function ScoreEdit({ selectedMember, onClose }: ScoreEditProps) {
+  const { data: scoreData } = useQuery({
+    queryKey: ['scoresByCategory', selectedMember?.id],
+    queryFn: () => getScoresByCategory(selectedMember!.id),
+    enabled: !!selectedMember,
+  });
+
+  const academicScore =
+    scoreData?.categories?.find((c) => c.categoryNames?.englishName === 'ACADEMIC_GRADE')
+      ?.recognizedScore ?? 0;
+
+  const volunteerScore =
+    scoreData?.categories?.find((c) => c.categoryNames?.englishName === 'VOLUNTEER')
+      ?.recognizedScore ?? 0;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
       <div className="h-[367px] w-[600px] rounded-[20px] bg-white px-[60px] py-[40px]">
