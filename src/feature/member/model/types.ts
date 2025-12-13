@@ -25,3 +25,28 @@ export interface MemberSearchResponse {
   totalElements: number;
   members: Member[];
 }
+
+export interface CategoryNames {
+  englishName: string;
+  koreanName: string;
+}
+
+export interface ScoreDetail {
+  scoreId: number;
+  categoryNames: CategoryNames;
+  scoreStatus: string;
+  activityName: string;
+  scoreValue: number;
+  rejectionReason?: string;
+}
+
+export interface ScoreByCategory {
+  categoryType: string;
+  categoryNames: CategoryNames;
+  recognizedScore: number;
+  scores: ScoreDetail[];
+}
+
+export interface ScoreByCategoryResponse {
+  categories: ScoreByCategory[];
+}
