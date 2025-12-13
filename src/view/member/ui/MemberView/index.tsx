@@ -1,5 +1,6 @@
 'use client';
 
+import ScoreEdit from '@/widget/member/ui/ScoreEdit';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Filter from '@/shared/asset/svg/Filter';
@@ -40,6 +41,8 @@ export default function MemberView() {
     });
     setIsModalOpen(false);
   };
+
+  const [isScoreEditOpen, setIsScoreEditOpen] = useState(false);
 
   if (isLoading) {
     return (
@@ -137,7 +140,10 @@ export default function MemberView() {
             </div>
 
             <div className="flex flex-col items-center gap-[12px]">
-              <button className="border-main-500 text-main-500 h-[52px] w-[272px] rounded-xl border text-lg font-semibold">
+              <button
+                onClick={() => setIsScoreEditOpen(true)}
+                className="border-main-500 text-main-500 h-[52px] w-[272px] rounded-xl border text-lg font-semibold"
+              >
                 점수 변경
               </button>
               <button className="border-main-500 text-main-500 h-[52px] w-[272px] rounded-xl border text-lg font-semibold">
@@ -163,6 +169,10 @@ export default function MemberView() {
         onClose={() => setIsModalOpen(false)}
         onSearch={handleSearch}
       />
+
+      {isScoreEditOpen && selectedMember ? (
+        <ScoreEdit selectedMember={selectedMember} onClose={() => setIsScoreEditOpen(false)} />
+      ) : null}
     </div>
   );
 }
