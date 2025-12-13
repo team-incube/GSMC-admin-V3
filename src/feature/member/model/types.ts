@@ -50,3 +50,7 @@ export interface ScoreByCategory {
 export interface ScoreByCategoryResponse {
   categories: ScoreByCategory[];
 }
+
+export interface PendingScoresResponse {
+  categories: ScoreByCategory[];
+}
