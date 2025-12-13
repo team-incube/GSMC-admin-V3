@@ -5,12 +5,14 @@ import { useQuery } from '@tanstack/react-query';
 import Filter from '@/shared/asset/svg/Filter';
 import QuestionMark from '@/shared/asset/svg/QuestionMark';
 import MemberSearchModal from '@/widget/member/ui/MemberSearchModal';
+import ScoreDetailModal from '@/widget/member/ui/ScoreDetailModal';
 import { getMemberSearch } from '@/feature/member/api/getMemberSearch';
 import type { Member, MemberSearchParams } from '@/feature/member/model/types';
 import { getTotalScore } from '@/feature/member/api/getTotalScore';
 
 export default function MemberView() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isScoreDetailModalOpen, setIsScoreDetailModalOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
   const [searchParams, setSearchParams] = useState<MemberSearchParams>({
     limit: 20,
@@ -140,7 +142,10 @@ export default function MemberView() {
               <button className="border-main-500 text-main-500 h-[52px] w-[272px] rounded-xl border text-lg font-semibold">
                 점수 변경
               </button>
-              <button className="border-main-500 text-main-500 h-[52px] w-[272px] rounded-xl border text-lg font-semibold">
+              <button
+                onClick={() => setIsScoreDetailModalOpen(true)}
+                className="border-main-500 text-main-500 h-[52px] w-[272px] cursor-pointer rounded-xl border text-lg font-semibold"
+              >
                 부분 점수 확인
               </button>
               <button className="border-main-500 text-main-500 h-[52px] w-[272px] rounded-xl border text-lg font-semibold">
@@ -162,6 +167,12 @@ export default function MemberView() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSearch={handleSearch}
+      />
+
+      <ScoreDetailModal
+        isOpen={isScoreDetailModalOpen}
+        onClose={() => setIsScoreDetailModalOpen(false)}
+        memberId={selectedMember?.id ?? null}
       />
     </div>
   );
