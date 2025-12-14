@@ -1,31 +1,53 @@
 'use client';
 
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState, useEffect } from 'react';
+import { useQuery, useQueries } from '@tanstack/react-query';
 import ModalWrapper from '@/shared/ui/ModalWrapper';
 import ScoreReviewModal from '@/widget/member/ui/ScoreReviewModal';
-import type { ScoreByCategory, ScoreDetail } from '@/feature/member/model/types';
+import type { ScoreByCategory, ScoreDetail, Member } from '@/feature/member/model/types';
 import { getPendingScores } from '@/feature/member/api/getPendingScores';
+import { getScoreDetail } from '@/feature/member/api/getScoreDetail';
 
 interface PendingScoresModalProps {
   isOpen: boolean;
   onClose: () => void;
   memberId: number | null;
+  member: Member | null;
 }
 
-export default function PendingScoresModal({ isOpen, onClose, memberId }: PendingScoresModalProps) {
+export default function PendingScoresModal({
+  isOpen,
+  onClose,
+  memberId,
+  member,
+}: PendingScoresModalProps) {
   const [selectedScore, setSelectedScore] = useState<
     (ScoreDetail & { categoryName: string }) | null
   >(null);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+
+  const [viewedScores, setViewedScores] = useState<Set<number>>(new Set());
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && memberId) {
+      const saved = localStorage.getItem(`viewedScores_${memberId}`);
+      if (saved) {
+        setViewedScores(new Set(JSON.parse(saved)));
+      }
+    }
+  }, [memberId]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && memberId && viewedScores.size > 0) {
+      localStorage.setItem(`viewedScores_${memberId}`, JSON.stringify(Array.from(viewedScores)));
+    }
+  }, [viewedScores, memberId]);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['pendingScores', memberId],
     queryFn: () => getPendingScores(memberId!),
     enabled: !!memberId && isOpen,
   });
-
-  if (!isOpen) return null;
 
   const allPendingScores: (ScoreDetail & { categoryName: string })[] = [];
 
@@ -37,6 +59,16 @@ export default function PendingScoresModal({ isOpen, onClose, memberId }: Pendin
       });
     });
   });
+
+  const scoreDetailsQueries = useQueries({
+    queries: allPendingScores.map((score) => ({
+      queryKey: ['scoreDetail', score.scoreId],
+      queryFn: () => getScoreDetail(score.scoreId),
+      enabled: !!score.scoreId && isOpen,
+    })),
+  });
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50" onClick={onClose}>
@@ -59,40 +91,54 @@ export default function PendingScoresModal({ isOpen, onClose, memberId }: Pendin
               </div>
             ) : (
               <div className="flex flex-col">
-                {allPendingScores.map((score, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between border-b border-gray-400 px-5 py-6"
-                  >
-                    <div className="flex items-center gap-[12px]">
-                      <p className="text-lg font-semibold text-gray-600">
-                        {score.activityName || score.categoryName}
-                      </p>
-                      {score.scoreStatus === 'PENDING' && (
-                        <span className="h-2 w-2 rounded-full bg-red-500"></span>
-                      )}
+                {allPendingScores.map((score, index) => {
+                  const scoreDetailQuery = scoreDetailsQueries[index];
+                  const scoreDetail = scoreDetailQuery?.data;
+
+                  const getDateString = () => {
+                    if (scoreDetail?.evidence?.createdAt) {
+                      return new Date(scoreDetail.evidence.createdAt).toLocaleDateString('ko-KR', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                      });
+                    }
+
+                    return '날짜 없음';
+                  };
+
+                  return (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between border-b border-gray-400 px-5 py-6"
+                    >
+                      <div className="flex items-center gap-[12px]">
+                        <p className="text-lg font-semibold text-gray-600">
+                          {score.activityName || score.categoryName}
+                        </p>
+                        {score.scoreStatus === 'PENDING' && !viewedScores.has(score.scoreId) && (
+                          <span className="h-2 w-2 rounded-full bg-red-500"></span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-[16px]">
+                        {scoreDetail?.evidence?.createdAt && (
+                          <p className="text-base text-gray-500">{getDateString()}</p>
+                        )}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedScore(score);
+                            setIsReviewModalOpen(true);
+                            setViewedScores((prev) => new Set(prev).add(score.scoreId));
+                          }}
+                          className="text-main-500 border-main-500 cursor-pointer rounded-lg border px-3 py-1 text-lg leading-[26px] font-semibold"
+                        >
+                          보기
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-[16px]">
-                      <p className="text-base text-gray-500">
-                        {new Date().toLocaleDateString('ko-KR', {
-                          year: 'numeric',
-                          month: '2-digit',
-                          day: '2-digit',
-                        })}
-                      </p>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedScore(score);
-                          setIsReviewModalOpen(true);
-                        }}
-                        className="text-main-500 border-main-500 cursor-pointer rounded-lg border px-3 py-1 text-lg leading-[26px] font-semibold transition-colors hover:bg-blue-50"
-                      >
-                        보기
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
@@ -114,6 +160,7 @@ export default function PendingScoresModal({ isOpen, onClose, memberId }: Pendin
         }}
         score={selectedScore}
         memberId={memberId}
+        member={member}
       />
     </div>
   );
