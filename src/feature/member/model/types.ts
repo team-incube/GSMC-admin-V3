@@ -31,6 +31,23 @@ export interface CategoryNames {
   koreanName: string;
 }
 
+export interface FileInfo {
+  id: number;
+  memberId: number;
+  originalName: string;
+  storeName: string;
+  uri: string;
+}
+
+export interface Evidence {
+  evidenceId: number;
+  title: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  files: FileInfo[];
+}
+
 export interface ScoreDetail {
   scoreId: number;
   categoryNames: CategoryNames;
@@ -38,6 +55,8 @@ export interface ScoreDetail {
   activityName: string;
   scoreValue: number;
   rejectionReason?: string;
+  evidence?: Evidence;
+  file?: FileInfo;
 }
 
 export interface ScoreByCategory {
