@@ -184,6 +184,7 @@ export default function MemberView() {
         isOpen={isPendingScoresModalOpen}
         onClose={() => setIsPendingScoresModalOpen(false)}
         memberId={selectedMember?.id ?? null}
+        member={selectedMember}
       />
     </div>
   );
