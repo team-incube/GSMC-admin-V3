@@ -1,7 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import ModalWrapper from '@/shared/ui/ModalWrapper';
+import ScoreReviewModal from '@/widget/member/ui/ScoreReviewModal';
 import type { ScoreByCategory, ScoreDetail } from '@/feature/member/model/types';
 import { getPendingScores } from '@/feature/member/api/getPendingScores';
 
@@ -12,6 +14,11 @@ interface PendingScoresModalProps {
 }
 
 export default function PendingScoresModal({ isOpen, onClose, memberId }: PendingScoresModalProps) {
+  const [selectedScore, setSelectedScore] = useState<
+    (ScoreDetail & { categoryName: string }) | null
+  >(null);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+
   const { data, isLoading, error } = useQuery({
     queryKey: ['pendingScores', memberId],
     queryFn: () => getPendingScores(memberId!),
@@ -73,7 +80,14 @@ export default function PendingScoresModal({ isOpen, onClose, memberId }: Pendin
                           day: '2-digit',
                         })}
                       </p>
-                      <button className="text-main-500 border-main-500 cursor-pointer rounded-lg border px-3 py-1 text-lg leading-[26px] font-semibold">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedScore(score);
+                          setIsReviewModalOpen(true);
+                        }}
+                        className="text-main-500 border-main-500 cursor-pointer rounded-lg border px-3 py-1 text-lg leading-[26px] font-semibold transition-colors hover:bg-blue-50"
+                      >
                         보기
                       </button>
                     </div>
@@ -91,6 +105,16 @@ export default function PendingScoresModal({ isOpen, onClose, memberId }: Pendin
           </button>
         </div>
       </ModalWrapper>
+
+      <ScoreReviewModal
+        isOpen={isReviewModalOpen}
+        onClose={() => {
+          setIsReviewModalOpen(false);
+          setSelectedScore(null);
+        }}
+        score={selectedScore}
+        memberId={memberId}
+      />
     </div>
   );
 }
