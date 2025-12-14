@@ -6,9 +6,10 @@ import { useQuery } from '@tanstack/react-query';
 interface ScoreEditProps {
   selectedMember: Member;
   onClose: () => void;
+  onOpenVolunteer: () => void;
 }
 
-export default function ScoreEdit({ selectedMember, onClose }: ScoreEditProps) {
+export default function ScoreEdit({ selectedMember, onClose, onOpenVolunteer }: ScoreEditProps) {
   const { data: scoreData } = useQuery({
     queryKey: ['scoresByCategory', selectedMember?.id],
     queryFn: () => getScoresByCategory(selectedMember!.id),
@@ -39,7 +40,7 @@ export default function ScoreEdit({ selectedMember, onClose }: ScoreEditProps) {
             <p className="text-lg font-semibold text-gray-600">봉사</p>
             <div className="flex flex-row items-center gap-3">
               <p className="text-lg font-semibold text-gray-600">{volunteerScore} 점</p>
-              <ChangeButton />
+              <ChangeButton onClick={onOpenVolunteer} />
             </div>
           </div>
         </div>
