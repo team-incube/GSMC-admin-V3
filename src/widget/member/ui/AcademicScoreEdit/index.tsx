@@ -11,7 +11,11 @@ interface AcademicScoreProps {
   onSuccess: () => void;
 }
 
-export default function AcademicScore({ selectedMember, onBack, onSuccess }: AcademicScoreProps) {
+export default function AcademicScoreEdit({
+  selectedMember,
+  onBack,
+  onSuccess,
+}: AcademicScoreProps) {
   const [value, setValue] = useState('');
   const queryClient = useQueryClient();
 
