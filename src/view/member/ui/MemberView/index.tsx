@@ -44,9 +44,7 @@ export default function MemberView() {
     setIsModalOpen(false);
   };
 
-  const [isScoreEditOpen, setIsScoreEditOpen] = useState(false);
-  const [isVolunteerEditOpen, setIsVolunteerEditOpen] = useState(false);
-  const [isAcademicEditOpen, setIsAcademicEditOpen] = useState(false);
+  const [openModal, setOpenModal] = useState<'score' | 'volunteer' | 'academic' | null>(null);
 
   if (isLoading) {
     return (
@@ -145,7 +143,7 @@ export default function MemberView() {
 
             <div className="flex flex-col items-center gap-[12px]">
               <button
-                onClick={() => setIsScoreEditOpen(true)}
+                onClick={() => setOpenModal('score')}
                 className="border-main-500 text-main-500 h-[52px] w-[272px] rounded-xl border text-lg font-semibold"
               >
                 점수 변경
@@ -173,45 +171,28 @@ export default function MemberView() {
         onClose={() => setIsModalOpen(false)}
         onSearch={handleSearch}
       />
-      {isScoreEditOpen && selectedMember ? (
+      {openModal === 'score' && selectedMember ? (
         <ScoreEdit
           selectedMember={selectedMember}
-          onClose={() => setIsScoreEditOpen(false)}
-          onOpenVolunteer={() => {
-            setIsScoreEditOpen(false);
-            setIsVolunteerEditOpen(true);
-          }}
-          onOpenAcademic={() => {
-            setIsScoreEditOpen(false);
-            setIsAcademicEditOpen(true);
-          }}
+          onClose={() => setOpenModal(null)}
+          onOpenVolunteer={() => setOpenModal('volunteer')}
+          onOpenAcademic={() => setOpenModal('academic')}
         />
       ) : null}
 
-      {isVolunteerEditOpen && selectedMember ? (
+      {openModal === 'volunteer' && selectedMember ? (
         <VolunteerScore
           selectedMember={selectedMember}
-          onBack={() => {
-            setIsVolunteerEditOpen(false);
-            setIsScoreEditOpen(true);
-          }}
-          onSuccess={() => {
-            setIsVolunteerEditOpen(false);
-            setIsScoreEditOpen(true);
-          }}
+          onBack={() => setOpenModal('score')}
+          onSuccess={() => setOpenModal('score')}
         />
       ) : null}
-      {isAcademicEditOpen && selectedMember ? (
+
+      {openModal === 'academic' && selectedMember ? (
         <AcademicScoreEdit
           selectedMember={selectedMember}
-          onBack={() => {
-            setIsAcademicEditOpen(false);
-            setIsScoreEditOpen(true);
-          }}
-          onSuccess={() => {
-            setIsAcademicEditOpen(false);
-            setIsScoreEditOpen(true);
-          }}
+          onBack={() => setOpenModal('score')}
+          onSuccess={() => setOpenModal('score')}
         />
       ) : null}
     </div>
