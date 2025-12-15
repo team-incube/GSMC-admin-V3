@@ -123,7 +123,7 @@ export default function ScoreReviewModal({
       if (!newWindow) {
         alert('팝업이 차단되었습니다. 팝업 차단을 해제해주세요.');
       }
-    } catch (error) {
+    } catch {
       alert('파일을 열 수 없습니다.');
     }
   };
@@ -188,7 +188,7 @@ export default function ScoreReviewModal({
             </>
           )}
 
-          {isRejectMode && (
+          {isRejectMode ? (
             <div className="mb-11">
               <label className="mb-2 block text-base font-medium text-gray-900">반려 사유</label>
               <textarea
@@ -198,7 +198,7 @@ export default function ScoreReviewModal({
                 className="h-30 w-full resize-none rounded-lg border border-gray-300 px-4 py-3 text-base focus:border-blue-500 focus:outline-none"
               />
             </div>
-          )}
+          ) : null}
 
           <div className="flex flex-col gap-3">
             {!isRejectMode ? (
