@@ -55,6 +55,8 @@ export interface ScoreDetail {
   activityName: string;
   scoreValue: number;
   rejectionReason?: string;
+  updatedAt?: string;
+  toeicParticipation?: boolean;
   evidence?: Evidence;
   file?: FileInfo;
 }
