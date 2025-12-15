@@ -23,12 +23,10 @@ export default function ScoreEdit({
   });
 
   const academicScore =
-    scoreData?.categories?.find((c) => c.categoryNames?.englishName === 'ACADEMIC_GRADE')
-      ?.recognizedScore ?? 0;
+    scoreData?.categories?.find((c) => c.categoryType === 'ACADEMIC_GRADE')?.recognizedScore ?? 0;
 
   const volunteerScore =
-    scoreData?.categories?.find((c) => c.categoryNames?.englishName === 'VOLUNTEER')
-      ?.recognizedScore ?? 0;
+    scoreData?.categories?.find((c) => c.categoryType === 'VOLUNTEER')?.recognizedScore ?? 0;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
       <div className="h-[367px] w-[600px] rounded-[20px] bg-white px-[60px] py-[40px]">
