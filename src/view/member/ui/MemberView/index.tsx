@@ -10,6 +10,7 @@ import { getMemberSearch } from '@/feature/member/api/getMemberSearch';
 import type { Member, MemberSearchParams } from '@/feature/member/model/types';
 import { getTotalScore } from '@/feature/member/api/getTotalScore';
 import VolunteerScore from '@/widget/member/ui/VolunteerScoreEdit';
+import AcademicScoreEdit from '@/widget/member/ui/AcademicScoreEdit';
 
 export default function MemberView() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,6 +46,7 @@ export default function MemberView() {
 
   const [isScoreEditOpen, setIsScoreEditOpen] = useState(false);
   const [isVolunteerEditOpen, setIsVolunteerEditOpen] = useState(false);
+  const [isAcademicEditOpen, setIsAcademicEditOpen] = useState(false);
 
   if (isLoading) {
     return (
@@ -179,6 +181,10 @@ export default function MemberView() {
             setIsScoreEditOpen(false);
             setIsVolunteerEditOpen(true);
           }}
+          onOpenAcademic={() => {
+            setIsScoreEditOpen(false);
+            setIsAcademicEditOpen(true);
+          }}
         />
       ) : null}
 
@@ -191,6 +197,19 @@ export default function MemberView() {
           }}
           onSuccess={() => {
             setIsVolunteerEditOpen(false);
+            setIsScoreEditOpen(true);
+          }}
+        />
+      ) : null}
+      {isAcademicEditOpen && selectedMember ? (
+        <AcademicScoreEdit
+          selectedMember={selectedMember}
+          onBack={() => {
+            setIsAcademicEditOpen(false);
+            setIsScoreEditOpen(true);
+          }}
+          onSuccess={() => {
+            setIsAcademicEditOpen(false);
             setIsScoreEditOpen(true);
           }}
         />
