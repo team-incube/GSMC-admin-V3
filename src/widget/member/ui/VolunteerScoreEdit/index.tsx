@@ -25,6 +25,9 @@ export default function VolunteerScoreEdit({
       queryClient.invalidateQueries({
         queryKey: ['totalScore', selectedMember.id],
       });
+      queryClient.invalidateQueries({
+        queryKey: ['scoresByCategory', selectedMember.id],
+      });
       onSuccess();
     },
     onError: () => {
