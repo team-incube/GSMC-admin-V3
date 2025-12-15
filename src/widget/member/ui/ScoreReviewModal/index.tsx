@@ -3,10 +3,12 @@
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import ModalWrapper from '@/shared/ui/ModalWrapper';
+import ReadOnlyInput from '@/shared/ui/ReadOnlyInput';
+import FileViewButton from '@/shared/ui/FileViewButton';
 import type { ScoreDetail, Member } from '@/feature/member/model/types';
 import { approveScore, rejectScore } from '@/feature/member/api/scoreActions';
 import { getScoreDetail } from '@/feature/member/api/getScoreDetail';
-import File from '@/shared/asset/svg/File';
+import { getToeicAcademyScore } from '@/feature/member/api/getToeicAcademyScore';
 
 interface ScoreReviewModalProps {
   isOpen: boolean;
@@ -27,10 +29,23 @@ export default function ScoreReviewModal({
   const [isRejectMode, setIsRejectMode] = useState(false);
   const queryClient = useQueryClient();
 
-  const { data: scoreDetail } = useQuery({
+  const { data: scoreDetail, isLoading: isLoadingDetail } = useQuery({
     queryKey: ['scoreDetail', score?.scoreId],
     queryFn: () => getScoreDetail(score!.scoreId),
     enabled: !!score?.scoreId && isOpen,
+  });
+
+  const isToeicCategory =
+    score?.categoryNames.englishName === 'TOEIC' ||
+    score?.categoryNames.englishName === 'TOEFL' ||
+    score?.categoryNames.englishName === 'OPIC' ||
+    score?.categoryNames.englishName === 'JLPT' ||
+    score?.categoryNames.englishName === 'HSK';
+
+  const { data: hasToeicAcademy } = useQuery({
+    queryKey: ['toeicAcademy', memberId],
+    queryFn: () => getToeicAcademyScore(memberId!),
+    enabled: !!memberId && isOpen && isToeicCategory,
   });
 
   const approveMutation = useMutation({
@@ -84,9 +99,40 @@ export default function ScoreReviewModal({
     onClose();
   };
 
+  const handleFileView = (fileId: number) => {
+    try {
+      const file =
+        scoreDetail?.file?.id === fileId
+          ? scoreDetail.file
+          : scoreDetail?.evidence?.files?.find((f) => f.id === fileId);
+
+      if (!file?.uri) {
+        alert('파일 정보를 찾을 수 없습니다.');
+        return;
+      }
+
+      let fileUrl: string;
+      if (file.uri.startsWith('http')) {
+        fileUrl = file.uri;
+      } else {
+        fileUrl = `http://gsmsv-1.yujun.kr:28644${file.uri}`;
+      }
+
+      const newWindow = window.open(fileUrl, '_blank');
+
+      if (!newWindow) {
+        alert('팝업이 차단되었습니다. 팝업 차단을 해제해주세요.');
+      }
+    } catch (error) {
+      alert('파일을 열 수 없습니다.');
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-[60]" onClick={handleCancel}>
-      <ModalWrapper className="max-h-[628px] w-[600px] px-25 py-15">
+      <ModalWrapper
+        className={`w-[600px] px-25 py-15 ${isRejectMode ? 'max-h-fit' : 'max-h-[700px]'}`}
+      >
         <div onClick={(e) => e.stopPropagation()}>
           <div className="mb-7 flex flex-col justify-center">
             <h2 className="flex justify-center text-[32px] font-semibold text-gray-900">
@@ -99,24 +145,48 @@ export default function ScoreReviewModal({
             </p>
           </div>
 
-          <div className="mb-3">
-            <label className="mb-2 block text-base font-medium text-gray-900">
-              {score.categoryNames.koreanName}
-            </label>
-            <input
-              type="text"
-              value={score.activityName || score.categoryNames.koreanName}
-              readOnly
-              className="h-[52px] w-full rounded-lg border border-gray-300 px-4 text-base text-gray-900"
-            />
-          </div>
+          {score.categoryNames.englishName === 'PROJECT_PARTICIPATION' ||
+          score.categoryNames.englishName === 'PROJECT-PARTICIPATION' ? (
+            <>
+              <ReadOnlyInput
+                label="주제"
+                value={scoreDetail?.evidence?.title || score.activityName || ''}
+              />
 
-          <div className="mb-3">
-            <button className="text-main-500 flex h-[52px] w-full items-center gap-2 rounded-lg border border-gray-300 p-4 text-base font-medium">
-              <File />
-              첨부된 파일 보기
-            </button>
-          </div>
+              <div className="mb-3">
+                <label className="mb-2 block text-base font-medium text-gray-900">내용</label>
+                <div className="max-h-[200px] min-h-[120px] overflow-y-auto rounded-lg border border-gray-300 px-4 py-3 text-base text-gray-900">
+                  {scoreDetail?.evidence?.content || '내용이 없습니다'}
+                </div>
+              </div>
+
+              <FileViewButton
+                fileId={scoreDetail?.evidence?.files?.[0]?.id}
+                isLoading={isLoadingDetail}
+                label="첨부된 이미지 보기"
+                fileCount={scoreDetail?.evidence?.files?.length}
+                onView={handleFileView}
+              />
+            </>
+          ) : (
+            <>
+              <ReadOnlyInput
+                label={score.categoryNames.koreanName}
+                value={score.activityName || score.scoreValue || ''}
+              />
+
+              <FileViewButton
+                fileId={scoreDetail?.file?.id}
+                isLoading={isLoadingDetail}
+                label="첨부된 파일 보기"
+                onView={handleFileView}
+              />
+
+              {score.categoryNames.englishName === 'TOEIC' && hasToeicAcademy !== undefined && (
+                <ReadOnlyInput label="토익사관학교" value={hasToeicAcademy ? '참여' : '미참여'} />
+              )}
+            </>
+          )}
 
           {isRejectMode && (
             <div className="mb-11">
