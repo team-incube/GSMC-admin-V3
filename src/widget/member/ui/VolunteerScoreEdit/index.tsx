@@ -11,7 +11,11 @@ interface VolunteerScoreProps {
   onSuccess: () => void;
 }
 
-export default function VolunteerScore({ selectedMember, onBack, onSuccess }: VolunteerScoreProps) {
+export default function VolunteerScoreEdit({
+  selectedMember,
+  onBack,
+  onSuccess,
+}: VolunteerScoreProps) {
   const [value, setValue] = useState('');
   const queryClient = useQueryClient();
 
