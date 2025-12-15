@@ -28,11 +28,6 @@ export default function FileViewButton({
       >
         <File />
         {isLoading ? '로딩 중...' : fileId ? label : '파일 없음'}
-        {fileCount && fileCount > 0 && (
-          <div className="bg-error absolute right-4 flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold text-white">
-            {fileCount}
-          </div>
-        )}
       </button>
     </div>
   );
