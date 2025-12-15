@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { postVolunteerScore } from '@/feature/member/api/postScoresByVolunteer';
 import type { Member } from '@/feature/member/model/types';
+import { postVolunteerScore } from '@/feature/member/api/postScoresByVolunteer';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 
 interface VolunteerScoreProps {
   selectedMember: Member;
@@ -30,6 +30,7 @@ export default function VolunteerScore({ selectedMember, onBack, onSuccess }: Vo
 
   const handleSubmit = () => {
     if (!value) {
+      alert('총 봉사 시간을 입력해주세요.');
       return;
     }
     mutate({
