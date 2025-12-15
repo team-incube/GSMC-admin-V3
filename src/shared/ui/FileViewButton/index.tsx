@@ -16,7 +16,7 @@ export default function FileViewButton({
   onView,
 }: FileViewButtonProps) {
   return (
-    <div className="mb-3">
+    <div className="mb-11">
       <button
         onClick={() => {
           if (fileId) {
