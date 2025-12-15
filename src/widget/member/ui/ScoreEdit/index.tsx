@@ -7,9 +7,15 @@ interface ScoreEditProps {
   selectedMember: Member;
   onClose: () => void;
   onOpenVolunteer: () => void;
+  onOpenAcademic: () => void;
 }
 
-export default function ScoreEdit({ selectedMember, onClose, onOpenVolunteer }: ScoreEditProps) {
+export default function ScoreEdit({
+  selectedMember,
+  onClose,
+  onOpenVolunteer,
+  onOpenAcademic,
+}: ScoreEditProps) {
   const { data: scoreData } = useQuery({
     queryKey: ['scoresByCategory', selectedMember?.id],
     queryFn: () => getScoresByCategory(selectedMember!.id),
@@ -32,7 +38,7 @@ export default function ScoreEdit({ selectedMember, onClose, onOpenVolunteer }: 
             <p className="text-lg font-semibold text-gray-600">교과성적</p>
             <div className="flex flex-row items-center gap-3">
               <p className="text-lg font-semibold text-gray-600">{academicScore} 점</p>
-              <ChangeButton />
+              <ChangeButton onClick={onOpenAcademic} />
             </div>
           </div>
           <hr className="border-gray-200" />
