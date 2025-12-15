@@ -106,13 +106,13 @@ export default function PendingScoresModal({
                             </p>
                             {score.scoreStatus === 'PENDING' &&
                               !viewedScores.has(score.scoreId) && (
-                                <span className="h-2 w-2 rounded-full bg-red-500"></span>
+                                <span className="h-2 w-2 rounded-full bg-red-500" />
                               )}
                           </div>
                           <div className="flex items-center gap-[16px]">
-                            {score.updatedAt && (
+                            {score.updatedAt ? (
                               <p className="text-base text-gray-500">{getDateString()}</p>
-                            )}
+                            ) : null}
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
