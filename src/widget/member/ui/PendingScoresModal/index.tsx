@@ -1,12 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useQuery, useQueries } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import ModalWrapper from '@/shared/ui/ModalWrapper';
 import ScoreReviewModal from '@/widget/member/ui/ScoreReviewModal';
 import type { ScoreByCategory, ScoreDetail, Member } from '@/feature/member/model/types';
 import { getPendingScores } from '@/feature/member/api/getPendingScores';
-import { getScoreDetail } from '@/feature/member/api/getScoreDetail';
 
 interface PendingScoresModalProps {
   isOpen: boolean;
@@ -60,14 +59,6 @@ export default function PendingScoresModal({
     });
   });
 
-  const scoreDetailsQueries = useQueries({
-    queries: allPendingScores.map((score) => ({
-      queryKey: ['scoreDetail', score.scoreId],
-      queryFn: () => getScoreDetail(score.scoreId),
-      enabled: !!score.scoreId && isOpen,
-    })),
-  });
-
   if (!isOpen) return null;
 
   return (
@@ -92,19 +83,14 @@ export default function PendingScoresModal({
             ) : (
               <div className="flex flex-col">
                 {allPendingScores.map((score, index) => {
-                  const scoreDetailQuery = scoreDetailsQueries[index];
-                  const scoreDetail = scoreDetailQuery?.data;
-
                   const getDateString = () => {
-                    if (scoreDetail?.evidence?.createdAt) {
-                      return new Date(scoreDetail.evidence.createdAt).toLocaleDateString('ko-KR', {
+                    if (score.updatedAt) {
+                      return new Date(score.updatedAt).toLocaleDateString('ko-KR', {
                         year: 'numeric',
                         month: '2-digit',
                         day: '2-digit',
                       });
                     }
-
-                    return '날짜 없음';
                   };
 
                   return (
@@ -113,15 +99,13 @@ export default function PendingScoresModal({
                       className="flex items-center justify-between border-b border-gray-400 px-5 py-6"
                     >
                       <div className="flex items-center gap-[12px]">
-                        <p className="text-lg font-semibold text-gray-600">
-                          {score.activityName || score.categoryName}
-                        </p>
+                        <p className="text-lg font-semibold text-gray-600">{score.categoryName}</p>
                         {score.scoreStatus === 'PENDING' && !viewedScores.has(score.scoreId) && (
                           <span className="h-2 w-2 rounded-full bg-red-500"></span>
                         )}
                       </div>
                       <div className="flex items-center gap-[16px]">
-                        {scoreDetail?.evidence?.createdAt && (
+                        {score.updatedAt && (
                           <p className="text-base text-gray-500">{getDateString()}</p>
                         )}
                         <button
