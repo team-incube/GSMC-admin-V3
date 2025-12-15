@@ -15,8 +15,8 @@ interface AcademicScoreProps {
 interface Subject {
   id: number;
   subject: string;
-  semester1: string; // "1" ~ "5"
-  semester2: string; // "1" ~ "5"
+  semester1: string;
+  semester2: string;
 }
 
 export default function AcademicScoreEdit({
@@ -46,14 +46,12 @@ export default function AcademicScoreEdit({
   });
 
   const handleSubmit = () => {
-    console.log('subjects 상태:', subjects);
     const value = subjects[0]?.semester1;
 
     if (!value) {
       alert('등급을 선택하세요');
       return;
     }
-    console.log('보내는 payload:', payload);
 
     mutate({
       value,
@@ -110,30 +108,28 @@ export default function AcademicScoreEdit({
                   />
                 </div>
 
-                {/* 1학기 */}
                 <div className="flex items-center justify-center border-r border-gray-400">
                   <select
                     className="h-[36px] w-[131px] rounded-lg border px-2 text-sm"
                     value={s.semester1}
                     onChange={(e) => update(s.id, 'semester1', e.target.value)}
                   >
-                    <option value="">등급 선택</option>
-                    <option value="1">1등급</option>
-                    <option value="2">2등급</option>
-                    <option value="3">3등급</option>
-                    <option value="4">4등급</option>
-                    <option value="5">5등급</option>
+                    <option value="">석차등급 선택</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
                   </select>
                 </div>
 
-                {/* 2학기 */}
                 <div className="flex items-center justify-center border-r border-gray-400 px-6 py-3">
                   <select
                     className="h-[36px] w-[131px] rounded-lg border px-2 text-sm"
                     value={s.semester2}
                     onChange={(e) => update(s.id, 'semester2', e.target.value)}
                   >
-                    <option value="">등급 선택</option>
+                    <option value="">석차등급 선택</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
