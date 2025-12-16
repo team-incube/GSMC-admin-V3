@@ -25,3 +25,29 @@ export interface MemberSearchResponse {
   totalElements: number;
   members: Member[];
 }
+
+export interface ScoreItem {
+  scoreId: number;
+  categoryNames: {
+    englishName: string;
+    koreanName: string;
+  };
+  scoreStatus: 'INCOMPLETE' | 'PENDING' | 'APPROVED' | 'REJECTED';
+  activityName: string;
+  scoreValue: number;
+  rejectionReason?: string;
+}
+
+export interface ScoreCategory {
+  categoryType: 'ACADEMIC' | 'VOLUNTEER' | string;
+  categoryNames: {
+    englishName: string;
+    koreanName: string;
+  };
+  recognizedScore: number;
+  scores: ScoreItem[];
+}
+
+export interface ScoresByCategoryResponse {
+  categories: ScoreCategory[];
+}
