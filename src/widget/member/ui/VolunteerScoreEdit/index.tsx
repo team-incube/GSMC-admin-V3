@@ -22,12 +22,13 @@ export default function VolunteerScoreEdit({
 
   const { mutate, isPending } = useMutation({
     mutationFn: postVolunteerScore,
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
+      const { memberId } = variables;
       queryClient.invalidateQueries({
-        queryKey: ['totalScore', selectedMember.id],
+        queryKey: ['totalScore', memberId],
       });
       queryClient.invalidateQueries({
-        queryKey: ['scoresByCategory', selectedMember.id],
+        queryKey: ['scoresByCategory', memberId],
       });
       onSaveSuccess();
     },
