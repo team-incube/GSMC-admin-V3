@@ -2,6 +2,7 @@
 
 import type { Member } from '@/feature/member/model/types';
 import { postVolunteerScore } from '@/feature/member/api/postScoresByVolunteer';
+import { toast } from 'sonner';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 
@@ -31,13 +32,13 @@ export default function VolunteerScoreEdit({
       onSuccess();
     },
     onError: () => {
-      alert('유효하지 않은 점수 값입니다.');
+      toast.error('유효하지 않은 점수 값입니다.');
     },
   });
 
   const handleSubmit = () => {
     if (!value) {
-      alert('총 봉사 시간을 입력해주세요.');
+      toast.warning('총 봉사 시간을 입력해주세요.');
       return;
     }
     mutate({
