@@ -177,7 +177,7 @@ export default function ReviewModal({
             </>
           )}
 
-          {isRejectMode && (
+          {isRejectMode ? (
             <div className="mb-11">
               <label className="mb-2 block text-base font-medium text-gray-900">반려 사유</label>
               <textarea
@@ -187,7 +187,7 @@ export default function ReviewModal({
                 className="h-30 w-full resize-none rounded-lg border border-gray-300 px-4 py-3 text-base focus:border-blue-500 focus:outline-none"
               />
             </div>
-          )}
+          ) : null}
 
           <div className="flex flex-col gap-3">
             {!isRejectMode ? (

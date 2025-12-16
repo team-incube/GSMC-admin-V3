@@ -76,7 +76,7 @@ export default function PendingScoresModal({
                           </div>
 
                           <div className="flex items-center gap-[16px]">
-                            {date && <p className="text-base text-gray-500">{date}</p>}
+                            {date ? <p className="text-base text-gray-500">{date}</p> : null}
                             <button
                               className="text-main-500 border-main-500 cursor-pointer rounded-lg border px-3 py-1 text-lg leading-[26px] font-semibold"
                               onClick={(e) => {
