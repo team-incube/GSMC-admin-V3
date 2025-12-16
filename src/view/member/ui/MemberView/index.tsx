@@ -184,7 +184,7 @@ export default function MemberView() {
         <VolunteerScore
           selectedMember={selectedMember}
           onBack={() => setOpenModal('score')}
-          onSuccess={() => setOpenModal('score')}
+          onSaveSuccess={() => setOpenModal('score')}
         />
       ) : null}
 
@@ -192,7 +192,7 @@ export default function MemberView() {
         <AcademicScoreEdit
           selectedMember={selectedMember}
           onBack={() => setOpenModal('score')}
-          onSuccess={() => setOpenModal('score')}
+          onSaveSuccess={() => setOpenModal('score')}
         />
       ) : null}
     </div>

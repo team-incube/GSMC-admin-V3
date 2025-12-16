@@ -9,13 +9,13 @@ import { useState } from 'react';
 interface AcademicScoreProps {
   selectedMember: Member;
   onBack: () => void;
-  onSuccess: () => void;
+  onSaveSuccess: () => void;
 }
 
 export default function AcademicScoreEdit({
   selectedMember,
   onBack,
-  onSuccess,
+  onSaveSuccess,
 }: AcademicScoreProps) {
   const [value, setValue] = useState('');
   const queryClient = useQueryClient();
@@ -29,7 +29,7 @@ export default function AcademicScoreEdit({
       queryClient.invalidateQueries({
         queryKey: ['scoresByCategory', selectedMember.id],
       });
-      onSuccess();
+      onSaveSuccess();
     },
     onError: () => {
       toast.error('유효하지 않은 점수 값입니다.');
