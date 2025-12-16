@@ -1,6 +1,6 @@
 import ChangeButton from '@/shared/ui/ChangeButton';
 import { getScoresByCategory } from '@/feature/member/api/getScoresByCategory';
-import { Member } from '@/feature/member/model/types';
+import { Member, ScoreCategoryType } from '@/feature/member/model/types';
 import { useQuery } from '@tanstack/react-query';
 
 interface ScoreEditProps {
@@ -23,20 +23,22 @@ export default function ScoreEdit({
   });
 
   const academicScore =
-    scoreData?.categories?.find((c) => c.categoryType === 'ACADEMIC_GRADE')?.recognizedScore ?? 0;
+    scoreData?.categories?.find((c) => c.categoryType === ScoreCategoryType.ACADEMIC_GRADE)
+      ?.recognizedScore ?? 0;
 
   const volunteerScore =
-    scoreData?.categories?.find((c) => c.categoryType === 'VOLUNTEER')?.recognizedScore ?? 0;
+    scoreData?.categories?.find((c) => c.categoryType === ScoreCategoryType.VOLUNTEER)
+      ?.recognizedScore ?? 0;
 
   const SCORE_EDIT = [
     {
-      key: 'ACADEMIC_GRADE',
+      key: ScoreCategoryType.ACADEMIC_GRADE,
       label: '교과성적',
       score: academicScore,
       onClick: onOpenAcademic,
     },
     {
-      key: 'VOLUNTEER',
+      key: ScoreCategoryType.VOLUNTEER,
       label: '봉사',
       score: volunteerScore,
       onClick: onOpenVolunteer,
