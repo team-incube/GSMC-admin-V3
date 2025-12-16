@@ -171,9 +171,9 @@ export default function ReviewModal({
                 onView={handleFileView}
               />
 
-              {score.categoryNames.englishName === 'TOEIC' && hasToeicAcademy !== undefined && (
+              {score.categoryNames.englishName === 'TOEIC' && hasToeicAcademy !== undefined ? (
                 <ReadOnlyInput label="토익사관학교" value={hasToeicAcademy ? '참여' : '미참여'} />
-              )}
+              ) : null}
             </>
           )}
 
