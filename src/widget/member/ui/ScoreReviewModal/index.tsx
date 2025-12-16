@@ -36,11 +36,7 @@ export default function ScoreReviewModal({
   });
 
   const isToeicCategory =
-    score?.categoryNames.englishName === 'TOEIC' ||
-    score?.categoryNames.englishName === 'TOEFL' ||
-    score?.categoryNames.englishName === 'OPIC' ||
-    score?.categoryNames.englishName === 'JLPT' ||
-    score?.categoryNames.englishName === 'HSK';
+    score?.categoryNames.englishName === 'TOEIC' || score?.categoryNames.englishName === 'JLPT';
 
   const { data: hasToeicAcademy } = useQuery({
     queryKey: ['toeicAcademy', memberId],
