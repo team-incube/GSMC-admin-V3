@@ -26,6 +26,11 @@ export interface MemberSearchResponse {
   members: Member[];
 }
 
+export enum ScoreCategoryType {
+  ACADEMIC_GRADE = 'ACADEMIC_GRADE',
+  VOLUNTEER = 'VOLUNTEER',
+}
+
 export interface ScoreItem {
   scoreId: number;
   categoryNames: {
@@ -39,7 +44,7 @@ export interface ScoreItem {
 }
 
 export interface ScoreCategory {
-  categoryType: 'ACADEMIC' | 'VOLUNTEER' | string;
+  categoryType: ScoreCategoryType;
   categoryNames: {
     englishName: string;
     koreanName: string;
