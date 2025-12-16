@@ -1,16 +1,20 @@
 'use client';
 
 import { useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
+
 import ModalWrapper from '@/shared/ui/ModalWrapper';
 import ReadOnlyInput from '@/shared/ui/ReadOnlyInput';
 import FileViewButton from '@/shared/ui/FileViewButton';
+
 import type { ScoreDetail, Member } from '@/feature/member/model/types';
-import { approveScore, rejectScore } from '@/feature/member/api/scoreActions';
 import { getScoreDetail } from '@/feature/member/api/getScoreDetail';
 import { getToeicAcademyScore } from '@/feature/member/api/getToeicAcademyScore';
 
-interface ScoreReviewModalProps {
+import { scoreKeys } from '@/feature/member/queryKeys/scoreKeys';
+import { useScoreReviewMutation } from '@/feature/member/model/hooks/useScoreReviewMutation';
+
+interface ReviewModalProps {
   isOpen: boolean;
   onClose: () => void;
   score: (ScoreDetail & { categoryName: string }) | null;
@@ -18,19 +22,20 @@ interface ScoreReviewModalProps {
   member: Member | null;
 }
 
-export default function ScoreReviewModal({
+export default function ReviewModal({
   isOpen,
   onClose,
   score,
   memberId,
   member,
-}: ScoreReviewModalProps) {
+}: ReviewModalProps) {
   const [rejectionReason, setRejectionReason] = useState('');
   const [isRejectMode, setIsRejectMode] = useState(false);
-  const queryClient = useQueryClient();
 
-  const { data: scoreDetail, isLoading: isLoadingDetail } = useQuery({
-    queryKey: ['scoreDetail', score?.scoreId],
+  const { approve, reject } = useScoreReviewMutation(memberId);
+
+  const { data: scoreDetail, isLoading } = useQuery({
+    queryKey: score?.scoreId ? scoreKeys.detail(score.scoreId) : [],
     queryFn: () => getScoreDetail(score!.scoreId),
     enabled: !!score?.scoreId && isOpen,
   });
@@ -39,46 +44,23 @@ export default function ScoreReviewModal({
     score?.categoryNames.englishName === 'TOEIC' || score?.categoryNames.englishName === 'JLPT';
 
   const { data: hasToeicAcademy } = useQuery({
-    queryKey: ['toeicAcademy', memberId],
+    queryKey: memberId && isToeicCategory ? ['toeicAcademy', memberId] : [],
     queryFn: () => getToeicAcademyScore(memberId!),
     enabled: !!memberId && isOpen && isToeicCategory,
-  });
-
-  const approveMutation = useMutation({
-    mutationFn: (scoreId: number) => approveScore(scoreId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['pendingScores', memberId] });
-      queryClient.invalidateQueries({ queryKey: ['scoresByCategory', memberId] });
-      queryClient.invalidateQueries({ queryKey: ['totalScore', memberId] });
-      alert('승인되었습니다.');
-      onClose();
-    },
-    onError: () => {
-      alert('승인에 실패했습니다.');
-    },
-  });
-
-  const rejectMutation = useMutation({
-    mutationFn: ({ scoreId, reason }: { scoreId: number; reason: string }) =>
-      rejectScore(scoreId, reason),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['pendingScores', memberId] });
-      queryClient.invalidateQueries({ queryKey: ['scoresByCategory', memberId] });
-      queryClient.invalidateQueries({ queryKey: ['totalScore', memberId] });
-      alert('반려되었습니다.');
-      setRejectionReason('');
-      setIsRejectMode(false);
-      onClose();
-    },
-    onError: () => {
-      alert('반려에 실패했습니다.');
-    },
   });
 
   if (!isOpen || !score) return null;
 
   const handleApprove = () => {
-    approveMutation.mutate(score.scoreId);
+    approve.mutate(score.scoreId, {
+      onSuccess: () => {
+        alert('승인되었습니다.');
+        onClose();
+      },
+      onError: () => {
+        alert('승인에 실패했습니다.');
+      },
+    });
   };
 
   const handleReject = () => {
@@ -86,7 +68,21 @@ export default function ScoreReviewModal({
       alert('반려 사유를 입력해주세요.');
       return;
     }
-    rejectMutation.mutate({ scoreId: score.scoreId, reason: rejectionReason });
+
+    reject.mutate(
+      { scoreId: score.scoreId, reason: rejectionReason },
+      {
+        onSuccess: () => {
+          alert('반려되었습니다.');
+          setRejectionReason('');
+          setIsRejectMode(false);
+          onClose();
+        },
+        onError: () => {
+          alert('반려에 실패했습니다.');
+        },
+      },
+    );
   };
 
   const handleCancel = () => {
@@ -107,18 +103,12 @@ export default function ScoreReviewModal({
         return;
       }
 
-      let fileUrl: string;
-      if (file.uri.startsWith('http')) {
-        fileUrl = file.uri;
-      } else {
-        fileUrl = `http://gsmsv-1.yujun.kr:28644${file.uri}`;
-      }
+      const url = file.uri.startsWith('http')
+        ? file.uri
+        : `http://gsmsv-1.yujun.kr:28644${file.uri}`;
 
-      const newWindow = window.open(fileUrl, '_blank');
-
-      if (!newWindow) {
-        alert('팝업이 차단되었습니다. 팝업 차단을 해제해주세요.');
-      }
+      const win = window.open(url, '_blank');
+      if (!win) alert('팝업이 차단되었습니다.');
     } catch {
       alert('파일을 열 수 없습니다.');
     }
@@ -136,7 +126,10 @@ export default function ScoreReviewModal({
             </h2>
             <p className="flex justify-end text-sm text-gray-400">
               {member
-                ? `${member.grade}${member.classNumber}${String(member.number).padStart(2, '0')} ${member.name}`
+                ? `${member.grade}${member.classNumber}${String(member.number).padStart(
+                    2,
+                    '0',
+                  )} ${member.name}`
                 : ''}
             </p>
           </div>
@@ -158,7 +151,7 @@ export default function ScoreReviewModal({
 
               <FileViewButton
                 fileId={scoreDetail?.evidence?.files?.[0]?.id}
-                isLoading={isLoadingDetail}
+                isLoading={isLoading}
                 label="첨부된 이미지 보기"
                 fileCount={scoreDetail?.evidence?.files?.length}
                 onView={handleFileView}
@@ -173,7 +166,7 @@ export default function ScoreReviewModal({
 
               <FileViewButton
                 fileId={scoreDetail?.file?.id}
-                isLoading={isLoadingDetail}
+                isLoading={isLoading}
                 label="첨부된 파일 보기"
                 onView={handleFileView}
               />
@@ -184,7 +177,7 @@ export default function ScoreReviewModal({
             </>
           )}
 
-          {isRejectMode ? (
+          {isRejectMode && (
             <div className="mb-11">
               <label className="mb-2 block text-base font-medium text-gray-900">반려 사유</label>
               <textarea
@@ -194,49 +187,47 @@ export default function ScoreReviewModal({
                 className="h-30 w-full resize-none rounded-lg border border-gray-300 px-4 py-3 text-base focus:border-blue-500 focus:outline-none"
               />
             </div>
-          ) : null}
+          )}
 
           <div className="flex flex-col gap-3">
             {!isRejectMode ? (
               <>
                 <button
                   onClick={handleCancel}
-                  disabled={approveMutation.isPending || rejectMutation.isPending}
-                  className="text-main-500 border-main-500 h-12 w-full cursor-pointer rounded-lg border bg-white text-base font-medium disabled:opacity-50"
+                  className="text-main-500 border-main-500 h-12 w-full rounded-lg border bg-white text-base font-medium"
                 >
                   뒤로가기
                 </button>
                 <div className="flex gap-3">
                   <button
                     onClick={handleApprove}
-                    disabled={approveMutation.isPending}
-                    className="bg-main-500 h-12 flex-1 cursor-pointer rounded-lg text-base font-semibold text-white disabled:opacity-50"
+                    disabled={approve.isPending}
+                    className="bg-main-500 h-12 flex-1 rounded-lg text-base font-semibold text-white disabled:opacity-50"
                   >
-                    {approveMutation.isPending ? '처리 중...' : '통과'}
+                    {approve.isPending ? '처리 중...' : '통과'}
                   </button>
                   <button
                     onClick={() => setIsRejectMode(true)}
-                    className="bg-error h-12 flex-1 cursor-pointer rounded-lg text-base font-semibold text-white"
+                    className="bg-error h-12 flex-1 rounded-lg text-base font-semibold text-white"
                   >
                     탈락
                   </button>
                 </div>
               </>
             ) : (
-              <div className="flex flex-row gap-3">
+              <div className="flex gap-3">
                 <button
                   onClick={handleCancel}
-                  disabled={approveMutation.isPending || rejectMutation.isPending}
-                  className="text-main-500 border-main-500 h-12 w-full cursor-pointer rounded-lg border bg-white text-base font-medium disabled:opacity-50"
+                  className="text-main-500 border-main-500 h-12 w-full rounded-lg border bg-white text-base font-medium"
                 >
                   뒤로가기
                 </button>
                 <button
                   onClick={handleReject}
-                  disabled={rejectMutation.isPending}
-                  className="bg-main-500 border-main-500 h-12 w-full cursor-pointer rounded-lg text-base font-semibold text-white disabled:opacity-50"
+                  disabled={reject.isPending}
+                  className="bg-main-500 h-12 w-full rounded-lg text-base font-semibold text-white disabled:opacity-50"
                 >
-                  {rejectMutation.isPending ? '처리 중...' : '완료'}
+                  {reject.isPending ? '처리 중...' : '완료'}
                 </button>
               </div>
             )}
