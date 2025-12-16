@@ -2,6 +2,7 @@
 
 import type { Member } from '@/feature/member/model/types';
 import { postAcademicScore } from '@/feature/member/api/postScoresByAcademic';
+import { toast } from 'sonner';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 
@@ -31,13 +32,13 @@ export default function AcademicScoreEdit({
       onSuccess();
     },
     onError: () => {
-      alert('유효하지 않은 점수 값입니다.');
+      toast.error('유효하지 않은 점수 값입니다.');
     },
   });
 
   const handleSubmit = () => {
     if (!value) {
-      alert('교과 성적 평균 등급을 입력해주세요.');
+      toast.warning('교과 성적 평균 등급을 입력해주세요.');
       return;
     }
     mutate({
