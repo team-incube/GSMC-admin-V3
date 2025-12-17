@@ -2,6 +2,10 @@ import { instance } from '@/shared/lib/axios';
 import type { ScoreByCategoryResponse } from '../model/types';
 
 export const getScoresByCategory = async (memberId: number): Promise<ScoreByCategoryResponse> => {
-  const res = await instance.get(`/scores/by-category/${memberId}`);
+  const res = await instance.get(`/scores/by-category/${memberId}`, {
+    params: {
+      status: 'APPROVED',
+    },
+  });
   return res.data?.data ?? { categories: [] };
 };

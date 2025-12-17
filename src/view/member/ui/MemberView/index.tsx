@@ -1,5 +1,6 @@
 'use client';
 
+import ScoreEdit from '@/widget/member/ui/ScoreEdit';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Filter from '@/shared/asset/svg/Filter';
@@ -10,6 +11,8 @@ import PendingScoresModal from '@/widget/member/ui/PendingScoresModal';
 import { getMemberSearch } from '@/feature/member/api/getMemberSearch';
 import type { Member, MemberSearchParams } from '@/feature/member/model/types';
 import { getTotalScore } from '@/feature/member/api/getTotalScore';
+import VolunteerScore from '@/widget/member/ui/VolunteerScoreEdit';
+import AcademicScoreEdit from '@/widget/member/ui/AcademicScoreEdit';
 
 export default function MemberView() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -44,6 +47,8 @@ export default function MemberView() {
     });
     setIsModalOpen(false);
   };
+
+  const [openModal, setOpenModal] = useState<'score' | 'volunteer' | 'academic' | null>(null);
 
   if (isLoading) {
     return (
@@ -141,7 +146,10 @@ export default function MemberView() {
             </div>
 
             <div className="flex flex-col items-center gap-[12px]">
-              <button className="border-main-500 text-main-500 h-[52px] w-[272px] rounded-xl border text-lg font-semibold">
+              <button
+                onClick={() => setOpenModal('score')}
+                className="border-main-500 text-main-500 h-[52px] w-[272px] rounded-xl border text-lg font-semibold"
+              >
                 점수 변경
               </button>
               <button
@@ -186,6 +194,31 @@ export default function MemberView() {
         memberId={selectedMember?.id ?? null}
         member={selectedMember}
       />
+
+      {openModal === 'score' && selectedMember ? (
+        <ScoreEdit
+          selectedMember={selectedMember}
+          onClose={() => setOpenModal(null)}
+          onOpenVolunteer={() => setOpenModal('volunteer')}
+          onOpenAcademic={() => setOpenModal('academic')}
+        />
+      ) : null}
+
+      {openModal === 'volunteer' && selectedMember ? (
+        <VolunteerScore
+          selectedMember={selectedMember}
+          onBack={() => setOpenModal('score')}
+          onSaveSuccess={() => setOpenModal('score')}
+        />
+      ) : null}
+
+      {openModal === 'academic' && selectedMember ? (
+        <AcademicScoreEdit
+          selectedMember={selectedMember}
+          onBack={() => setOpenModal('score')}
+          onSaveSuccess={() => setOpenModal('score')}
+        />
+      ) : null}
     </div>
   );
 }
