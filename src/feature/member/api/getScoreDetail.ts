@@ -1,4 +1,4 @@
-import { instance } from '@/shared/lib/axios';
+import { instance } from '@/shared/lib/instance';
 import type { ScoreDetail } from '../model/types';
 
 export const getScoreDetail = async (scoreId: number): Promise<ScoreDetail> => {

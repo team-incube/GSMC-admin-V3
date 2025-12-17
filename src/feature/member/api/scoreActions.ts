@@ -1,4 +1,4 @@
-import { instance } from '@/shared/lib/axios';
+import { instance } from '@/shared/lib/instance';
 
 export const approveScore = async (scoreId: number): Promise<void> => {
   await instance.patch(`/scores/${scoreId}/approve`);
