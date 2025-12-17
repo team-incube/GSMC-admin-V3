@@ -1,14 +1,11 @@
-import { instance } from '@/shared/lib/axios';
-import { SignupFormValueType } from '../model/SignupSchema';
+import { instance } from '@/shared/lib/instance';
 
-export const postSignup = async ({ name, studentNumber }: SignupFormValueType) => {
-  try {
-    const response = await instance.post('/auth/signup', {
-      name,
-      studentNumber,
-    });
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+import { SignupFormType } from '../model/SignupSchema';
+
+export const postSignup = async ({ name, studentNumber }: SignupFormType) => {
+  const response = await instance.post('/auth/signup', {
+    name,
+    studentNumber,
+  });
+  return response.data;
 };
