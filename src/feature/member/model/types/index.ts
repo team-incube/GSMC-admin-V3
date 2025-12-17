@@ -1,4 +1,13 @@
-export type { Member, MemberSearchParams, MemberSearchResponse } from './member.type';
+export type {
+  Member,
+  MemberSearchParams,
+  MemberSearchResponse,
+  ScoreCategory,
+  ScoreItem,
+  ScoresByCategoryResponse,
+} from './member.type';
+
+export { ScoreCategoryType } from './member.type';
 
 export type {
   ScoreDetail,
