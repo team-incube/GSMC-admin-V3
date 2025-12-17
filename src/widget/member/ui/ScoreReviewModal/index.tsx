@@ -1,18 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
 
 import ModalWrapper from '@/shared/ui/ModalWrapper';
 import ReadOnlyInput from '@/shared/ui/ReadOnlyInput';
 import FileViewButton from '@/shared/ui/FileViewButton';
 
 import type { ScoreDetail, Member } from '@/feature/member/model/types';
-import { getScoreDetail } from '@/feature/member/api/getScoreDetail';
-import { getToeicAcademyScore } from '@/feature/member/api/getToeicAcademyScore';
-
-import { scoreKeys } from '@/feature/member/queryKeys/scoreKeys';
 import { useScoreReviewMutation } from '@/feature/member/model/hooks/useScoreReviewMutation';
+import { useScoreReview } from '@/feature/member/model/hooks/useScoreReview';
 
 interface ReviewModalProps {
   isOpen: boolean;
@@ -32,54 +28,40 @@ export default function ReviewModal({
   const [rejectionReason, setRejectionReason] = useState('');
   const [isRejectMode, setIsRejectMode] = useState(false);
 
+  const {
+    scoreDetail,
+    hasToeicAcademy,
+    isLoading,
+    isProjectCategory,
+    isToeicCategory,
+    handleFileView: handleFileViewInternal,
+  } = useScoreReview({
+    scoreId: score?.scoreId ?? null,
+    memberId,
+    categoryName: score?.categoryNames.englishName ?? null,
+    isOpen,
+  });
+
   const { approve, reject } = useScoreReviewMutation(memberId);
-
-  const { data: scoreDetail, isLoading } = useQuery({
-    queryKey: score?.scoreId ? scoreKeys.detail(score.scoreId) : [],
-    queryFn: () => getScoreDetail(score!.scoreId),
-    enabled: !!score?.scoreId && isOpen,
-  });
-
-  const isToeicCategory =
-    score?.categoryNames.englishName === 'TOEIC' || score?.categoryNames.englishName === 'JLPT';
-
-  const { data: hasToeicAcademy } = useQuery({
-    queryKey: memberId && isToeicCategory ? ['toeicAcademy', memberId] : [],
-    queryFn: () => getToeicAcademyScore(memberId!),
-    enabled: !!memberId && isOpen && isToeicCategory,
-  });
 
   if (!isOpen || !score) return null;
 
   const handleApprove = () => {
     approve.mutate(score.scoreId, {
       onSuccess: () => {
-        alert('승인되었습니다.');
         onClose();
-      },
-      onError: () => {
-        alert('승인에 실패했습니다.');
       },
     });
   };
 
   const handleReject = () => {
-    if (!rejectionReason.trim()) {
-      alert('반려 사유를 입력해주세요.');
-      return;
-    }
-
     reject.mutate(
       { scoreId: score.scoreId, reason: rejectionReason },
       {
         onSuccess: () => {
-          alert('반려되었습니다.');
           setRejectionReason('');
           setIsRejectMode(false);
           onClose();
-        },
-        onError: () => {
-          alert('반려에 실패했습니다.');
         },
       },
     );
@@ -92,26 +74,7 @@ export default function ReviewModal({
   };
 
   const handleFileView = (fileId: number) => {
-    try {
-      const file =
-        scoreDetail?.file?.id === fileId
-          ? scoreDetail.file
-          : scoreDetail?.evidence?.files?.find((f) => f.id === fileId);
-
-      if (!file?.uri) {
-        alert('파일 정보를 찾을 수 없습니다.');
-        return;
-      }
-
-      const url = file.uri.startsWith('http')
-        ? file.uri
-        : `http://gsmsv-1.yujun.kr:28644${file.uri}`;
-
-      const win = window.open(url, '_blank');
-      if (!win) alert('팝업이 차단되었습니다.');
-    } catch {
-      alert('파일을 열 수 없습니다.');
-    }
+    handleFileViewInternal(fileId);
   };
 
   return (
@@ -171,7 +134,7 @@ export default function ReviewModal({
                 onView={handleFileView}
               />
 
-              {score.categoryNames.englishName === 'TOEIC' && hasToeicAcademy !== undefined ? (
+              {isToeicCategory && hasToeicAcademy !== undefined ? (
                 <ReadOnlyInput label="토익사관학교" value={hasToeicAcademy ? '참여' : '미참여'} />
               ) : null}
             </>
@@ -194,7 +157,7 @@ export default function ReviewModal({
               <>
                 <button
                   onClick={handleCancel}
-                  className="text-main-500 border-main-500 h-12 w-full rounded-lg border bg-white text-base font-medium"
+                  className="text-main-500 border-main-500 h-12 w-full cursor-pointer rounded-lg border bg-white text-base font-medium"
                 >
                   뒤로가기
                 </button>
@@ -202,13 +165,13 @@ export default function ReviewModal({
                   <button
                     onClick={handleApprove}
                     disabled={approve.isPending}
-                    className="bg-main-500 h-12 flex-1 rounded-lg text-base font-semibold text-white disabled:opacity-50"
+                    className="bg-main-500 h-12 flex-1 cursor-pointer rounded-lg text-base font-semibold text-white disabled:opacity-50"
                   >
                     {approve.isPending ? '처리 중...' : '통과'}
                   </button>
                   <button
                     onClick={() => setIsRejectMode(true)}
-                    className="bg-error h-12 flex-1 rounded-lg text-base font-semibold text-white"
+                    className="bg-error h-12 flex-1 cursor-pointer rounded-lg text-base font-semibold text-white"
                   >
                     탈락
                   </button>
@@ -218,14 +181,14 @@ export default function ReviewModal({
               <div className="flex gap-3">
                 <button
                   onClick={handleCancel}
-                  className="text-main-500 border-main-500 h-12 w-full rounded-lg border bg-white text-base font-medium"
+                  className="text-main-500 border-main-500 h-12 w-full cursor-pointer rounded-lg border bg-white text-base font-medium"
                 >
                   뒤로가기
                 </button>
                 <button
                   onClick={handleReject}
                   disabled={reject.isPending}
-                  className="bg-main-500 h-12 w-full rounded-lg text-base font-semibold text-white disabled:opacity-50"
+                  className="bg-main-500 h-12 w-full cursor-pointer rounded-lg text-base font-semibold text-white disabled:opacity-50"
                 >
                   {reject.isPending ? '처리 중...' : '완료'}
                 </button>
