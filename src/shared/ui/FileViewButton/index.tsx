@@ -24,7 +24,7 @@ export default function FileViewButton({
           }
         }}
         disabled={isLoading || !fileId}
-        className={`text-main-500 flex h-[52px] w-full items-center gap-2 rounded-lg border border-gray-300 p-4 text-base font-medium disabled:cursor-not-allowed disabled:opacity-50 ${fileCount ? 'relative' : ''}`}
+        className={`text-main-500 flex h-[52px] w-full cursor-pointer items-center gap-2 rounded-lg border border-gray-300 p-4 text-base font-medium disabled:cursor-not-allowed disabled:opacity-50 ${fileCount ? 'relative' : ''}`}
       >
         <File />
         {isLoading ? '로딩 중...' : fileId ? label : '파일 없음'}
