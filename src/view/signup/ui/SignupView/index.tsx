@@ -1,5 +1,5 @@
 import BackArrow from '@/shared/asset/svg/BackArrow';
-import SignupForm from '@/widget/signup/ui/SignupForm';
+import SignupForm from '@/widget/signup/ui';
 
 export default function SignupView() {
   return (
