@@ -1,3 +1,5 @@
+"use client";
+
 import BackArrow from '@/shared/asset/svg/BackArrow';
 import SignupForm from '@/widget/signup/ui';
 import { useRouter } from 'next/navigation';
