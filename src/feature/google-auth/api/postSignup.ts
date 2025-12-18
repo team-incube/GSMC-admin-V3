@@ -2,10 +2,12 @@ import { instance } from '@/shared/lib/instance';
 
 import { SignupFormType } from '../model/SignupSchema';
 
-export const postSignup = async ({ name, studentNumber }: SignupFormType) => {
-  const response = await instance.post('/auth/signup', {
+export const postSignup = async ({ name, requestedRole, grade, classNumber }: SignupFormType) => {
+  const response = await instance.post('/auth/teacher-signup', {
     name,
-    studentNumber,
+    requestedRole,
+    grade,
+    classNumber,
   });
   return response.data;
 };

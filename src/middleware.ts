@@ -67,7 +67,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if (isPublicRoute && userRole && userRole !== 'UNAUTHORIZED') {
-    const redirect = NextResponse.redirect(new URL('/main', request.url));
+    const redirect = NextResponse.redirect(new URL('/member', request.url));
     if (newTokens) {
       await setAuthCookies(newTokens.accessToken, newTokens.refreshToken, redirect);
     }
