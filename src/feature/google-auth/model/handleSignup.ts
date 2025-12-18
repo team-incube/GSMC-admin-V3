@@ -12,9 +12,15 @@ export async function handleSignup(
   _prevState: ActionState<SignupFormType>,
   formData: FormData,
 ): Promise<ActionState<SignupFormType>> {
+  const requestedRole = formData.get('requestedRole') as 'TEACHER' | 'HOMEROOM_TEACHER';
+  const gradeValue = formData.get('grade');
+  const classNumberValue = formData.get('classNumber');
+
   const currentData: SignupFormType = {
     name: String(formData.get('name') ?? '').trim(),
-    studentNumber: Number(formData.get('studentNumber')),
+    requestedRole,
+    ...(gradeValue && { grade: Number(gradeValue) }),
+    ...(classNumberValue && { classNumber: Number(classNumberValue) }),
   };
 
   const result = SignupSchema.safeParse(currentData);
