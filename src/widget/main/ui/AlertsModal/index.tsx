@@ -11,7 +11,7 @@ export default function AlertsModal() {
   const { mutate } = useReadAlertById();
 
   useEffect(() => {
-    if (alerts && alerts.length > 0) mutate({ lastAlertId: alerts?.[alerts.length - 1].id })
+    if (alerts && alerts.length > 0) mutate({ lastAlertId: alerts[0].id })
   }, [alerts, mutate])
 
   return (
