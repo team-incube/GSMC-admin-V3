@@ -1,4 +1,4 @@
-import { instance } from '@/shared/lib/axios';
+import { instance } from '@/shared/lib/instance';
 import type { PendingScoresResponse } from '../model/types';
 
 export const getPendingScores = async (memberId: number): Promise<PendingScoresResponse> => {

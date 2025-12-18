@@ -1,4 +1,4 @@
-import { instance } from '@/shared/lib/axios';
+import { instance } from '@/shared/lib/instance';
 import type { MemberSearchParams, MemberSearchResponse } from '@/feature/member/model/types';
 
 export const getMemberSearch = async (

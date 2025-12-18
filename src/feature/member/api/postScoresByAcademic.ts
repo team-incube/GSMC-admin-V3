@@ -1,4 +1,4 @@
-import { instance } from '@/shared/lib/axios';
+import { instance } from '@/shared/lib/instance';
 
 interface PostAcademicScoreRequest {
   value: string;

@@ -11,7 +11,7 @@ export default function Input({
       <label className="text-body1 text-main-700" htmlFor={label}>
         {label}
       </label>
-      <input className="rounded-2xl border border-gray-300 p-4" {...props} id={label} type="text" />
+      <input className="rounded-2xl border border-gray-300 p-4" id={label} type="text" {...props} />
     </div>
   );
 }
