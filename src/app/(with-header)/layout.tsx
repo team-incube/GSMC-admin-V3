@@ -1,4 +1,4 @@
-import Header from '@/shared/ui/header/ui/Header';
+import Header from "@/widget/header/ui";
 
 export default function Mainlayout({ children }: { children: React.ReactNode }) {
   return (
