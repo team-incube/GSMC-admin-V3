@@ -7,7 +7,7 @@ export const SignupSchema = z.object({
   classNumber: z.number().int().min(1, '반은 1 이상이어야 합니다.').max(3, '반은 3 이하이어야 합니다.').optional(),
 }).refine(
   (data) => {
-    if (data.requestedRole === 'TEACHER' && (!data.grade || !data.classNumber)) {
+    if (data.requestedRole === 'HOMEROOM_TEACHER' && (!data.grade || !data.classNumber)) {
       return false;
     }
     return true;

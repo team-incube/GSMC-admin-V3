@@ -43,9 +43,9 @@ export default function SignupForm() {
             <input
               type="radio"
               name="requestedRole"
-              value="TEACHER"
-              checked={selectedRole === 'TEACHER'}
-              onChange={(e) => setSelectedRole(e.target.value as 'TEACHER')}
+              value="HOMEROOM_TEACHER"
+              checked={selectedRole === 'HOMEROOM_TEACHER'}
+              onChange={(e) => setSelectedRole(e.target.value as 'HOMEROOM_TEACHER')}
             />
             <span>담임 선생님</span>
           </label>
@@ -53,9 +53,9 @@ export default function SignupForm() {
             <input
               type="radio"
               name="requestedRole"
-              value="HOMEROOM_TEACHER"
-              checked={selectedRole === 'HOMEROOM_TEACHER'}
-              onChange={(e) => setSelectedRole(e.target.value as 'HOMEROOM_TEACHER')}
+              value="TEACHER"
+              checked={selectedRole === 'TEACHER'}
+              onChange={(e) => setSelectedRole(e.target.value as 'TEACHER')}
             />
             <span>마이스터부 선생님</span>
           </label>
@@ -63,7 +63,7 @@ export default function SignupForm() {
         <small className="text-error pl-1">{state.fieldErrors?.requestedRole}</small>
       </div>
 
-      {selectedRole === 'TEACHER' && (
+      {selectedRole === 'HOMEROOM_TEACHER' && (
         <>
           <div>
             <Input
