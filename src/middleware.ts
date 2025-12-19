@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 import axios from 'axios';
 
-import { RoleType, StudentType } from './entities/student/model/student';
+import { RoleType, MemberType } from './entities/member/model/member';
 import { AuthTokenType } from './feature/google-auth/model/auth';
 import { COOKIE_CONFIG } from './shared/config/cookie';
 import { PROTECT_PAGE, PUBLIC_PAGE } from './shared/config/protect-page';
@@ -22,7 +22,7 @@ export async function middleware(request: NextRequest) {
 
   if (accessToken) {
     try {
-      const response = await axios.get<{ data: StudentType }>(`${BACKEND_URL}/members/my`, {
+      const response = await axios.get<{ data: MemberType }>(`${BACKEND_URL}/members/my`, {
         headers: {
           Cookie: `accessToken=${accessToken}`,
         },
