@@ -19,7 +19,15 @@ export default function CallbackView() {
       try {
         const response = await axios.post('/api/auth/google/callback', { code });
 
-        if (response.data.role === "UNAUTHORIZED") {
+        if (response.data.role === 'UNAUTHORIZED') {
+
+          const requestInfo = await axios.get('/api/proxy/auth/teacher-signup/my-request');
+          if (requestInfo.data) {
+            toast.success('교직원 승인 대기 중입니다.');
+            router.push('/teacher-request');
+            return;
+          }
+
           toast.success('환영합니다! 회원가입을 완료해주세요.');
           router.push('/signup');
         } else {

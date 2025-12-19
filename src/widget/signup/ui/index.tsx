@@ -11,7 +11,7 @@ import { SignupFormType } from '@/feature/google-auth/model/SignupSchema';
 import { createInitialState } from '@/shared/lib/createInitialState';
 import Button from '@/shared/ui/Button';
 import Input from '@/shared/ui/Input';
-import { RoleType } from '@/entities/student/model/student';
+import { RoleType } from '@/entities/member/model/member';
 
 export default function SignupForm() {
   const [state, formAction, isPending] = useActionState(handleSignup, createInitialState<SignupFormType>());
@@ -22,12 +22,16 @@ export default function SignupForm() {
     if (state.message) {
       if (state.status === "success") {
         toast.success(state.message);
-        router.push("/")
+        if (selectedRole === 'TEACHER' || selectedRole === 'HOMEROOM_TEACHER') {
+          router.push('/teacher-request');
+        } else {
+          router.push('/');
+        }
       } else {
         toast.error(state.message);
       }
     }
-  }, [state, router]);
+  }, [state, router, selectedRole]);
 
   return (
     <form className="flex flex-col gap-9" action={formAction}>

@@ -1,12 +1,23 @@
 "use client";
 
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import SignupForm from '@/widget/signup/ui';
 import BackArrow from '@/shared/asset/svg/BackArrow';
+import { useTeacherRequest } from '@/feature/teacher-signup/model/useTeacherRequest';
 
 export default function SignupView() {
   const router = useRouter();
+  const { data: requestInfo, isLoading } = useTeacherRequest();
+
+  useEffect(() => {
+    if (!isLoading && requestInfo) {
+      router.push('/teacher-request');
+    }
+  }, [requestInfo, isLoading, router]);
+
+  if (isLoading) return null;
 
   return (
     <div className="flex justify-center px-6">
