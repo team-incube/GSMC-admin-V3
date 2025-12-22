@@ -4,7 +4,7 @@ import { getCurrentMember } from '../api/getCurrentMember';
 
 export const useGetCurrentMember = () => {
   return useQuery({
-    queryKey: ['student', 'current'],
+    queryKey: ['teacher', 'current'],
     queryFn: () => getCurrentMember(),
     staleTime: 60 * 60 * 1000,
   });
