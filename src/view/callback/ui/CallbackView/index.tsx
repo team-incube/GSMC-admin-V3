@@ -33,6 +33,9 @@ export default function CallbackView() {
               if (error.response?.status === 404) {
                 toast.success('환영합니다! 회원가입을 완료해주세요.');
                 router.push('/signup');
+              } else {
+                toast.error('가입 정보를 확인하는 중 오류가 발생했습니다.');
+                router.push('/');
               }
             }
           }
