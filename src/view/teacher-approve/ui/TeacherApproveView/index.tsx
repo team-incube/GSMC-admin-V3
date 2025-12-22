@@ -28,7 +28,7 @@ export default function TeacherApproveView() {
   }
 
   return (
-    <div className="flex w-full justify-center p-6">
+    <div className="flex w-full justify-center py-6">
       <div className="w-full p-4 grid grid-cols-1 gap-4">
         {requestInfo.map((request) => (
           <article key={request.memberId} className='flex flex-col gap-4 border rounded-2xl border-black/20 p-4'>
