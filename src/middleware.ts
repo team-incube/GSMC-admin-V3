@@ -1,65 +1,98 @@
-import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
+import axios from 'axios';
+import { RoleType, MemberType } from './entities/member/model/member';
+import { AuthTokenType } from './feature/google-auth/model/auth';
+import { COOKIE_CONFIG } from './shared/config/cookie';
+import { PROTECT_PAGE, PUBLIC_PAGE } from './shared/config/protect-page';
 
-export function middleware(request: NextRequest) {
+const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL;
+
+export async function middleware(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
   const currentPath = request.nextUrl.pathname;
+  const isProtectedRoute = PROTECT_PAGE.includes(currentPath);
+  const isPublicRoute = PUBLIC_PAGE.includes(currentPath);
+  const accessToken = request.cookies.get('accessToken')?.value;
+  const refreshToken = request.cookies.get('refreshToken')?.value;
 
-  if (currentPath.startsWith('/api')) {
-    requestHeaders.set('x-custom-header', 'api-request');
+  let userRole: RoleType | null = null;
 
-    const accessToken = request.cookies.get('accessToken');
-    if (accessToken) {
-      requestHeaders.set('Authorization', `Bearer ${accessToken.value}`);
-    }
-
-    return NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-    });
-  }
-
-  if (
-    currentPath.startsWith('/_next') ||
-    currentPath.startsWith('/favicon') ||
-    currentPath.includes('.')
-  ) {
-    return NextResponse.next();
-  }
-
-  const hasAccessToken = request.cookies.has('accessToken');
-  const hasRefreshToken = request.cookies.has('refreshToken');
-
-  const isProtectedPage = ['/main'].some((path: string) => currentPath.startsWith(path));
-  const isAuthPage = ['/intro', '/signup'].some((path: string) => currentPath.startsWith(path));
-
-  if (!hasAccessToken && isProtectedPage) {
-    if (hasRefreshToken) {
-      return NextResponse.next({
-        request: {
-          headers: requestHeaders,
-        },
-      });
-    } else {
-      return NextResponse.redirect(new URL('/intro', request.url));
+  if (accessToken) {
+    try {
+      const response = await axios.get<{ data: MemberType }>(
+        `${BACKEND_URL}/members/my`,
+        {
+          headers: {
+            Cookie: `accessToken=${accessToken}`,
+          },
+        }
+      );
+      userRole = response.data.data.role;
+    } catch {
+      userRole = null;
     }
   }
 
-  if (hasAccessToken && isAuthPage) {
-    return NextResponse.redirect(new URL('/main', request.url));
+  if ((!accessToken || !userRole) && refreshToken) {
+    try {
+      const response = await axios.put<{ data: AuthTokenType }>(
+        `${BACKEND_URL}/auth/refresh`,
+        {},
+        {
+          headers: { Cookie: `refreshToken=${refreshToken}` },
+          withCredentials: true
+        }
+      );
+
+      userRole = response?.data.data.role ?? null;
+
+      const setCookie = response.headers['set-cookie'];
+
+      if (setCookie && userRole) {
+        const redirectUrl = new URL(request.url);
+        const redirect = NextResponse.redirect(redirectUrl);
+
+        const cookies = Array.isArray(setCookie) ? setCookie : [setCookie];
+
+        cookies.forEach((cookie) => {
+          redirect.headers.append('Set-Cookie', cookie);
+        });
+
+        return redirect;
+      }
+    } catch {
+      userRole = null;
+    }
   }
 
-  return NextResponse.next({
+  if (isProtectedRoute) {
+    if (!userRole) {
+      const redirect = NextResponse.redirect(new URL('/', request.url));
+      redirect.cookies.delete(COOKIE_CONFIG.accessToken.name);
+      redirect.cookies.delete(COOKIE_CONFIG.refreshToken.name);
+      return redirect;
+    }
+    if (userRole === 'UNAUTHORIZED') {
+      const redirect = NextResponse.redirect(new URL('/signup', request.url));
+      return redirect;
+    }
+  }
+
+  if (isPublicRoute && userRole && userRole !== 'UNAUTHORIZED') {
+    const redirect = NextResponse.redirect(new URL('/member', request.url));
+    return redirect;
+  }
+
+  const nextResponse = NextResponse.next({
     request: {
       headers: requestHeaders,
     },
   });
+
+  return nextResponse;
 }
 
 export const config = {
-  matcher: [
-    '/api/:path*',
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|jpeg|gif|svg|webp|ico)).*)',
-  ],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|api/auth).*)'],
 };

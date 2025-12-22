@@ -1,8 +1,13 @@
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
 import type { Metadata } from 'next';
-import './globals.css';
-import { QueryProvider } from '@/shared/lib/query';
-import { Toaster } from 'sonner';
 import localFont from 'next/font/local'
+
+import { Toaster } from 'sonner';
+
+import { QueryProvider } from '@/shared/lib/query';
+
+import './globals.css';
 
 const pretendard = localFont({
   src: '../shared/asset/fonts/pretendard/PretendardVariable.woff2',
@@ -25,10 +30,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={pretendard.variable}>
       <body>
-        <QueryProvider>
-          {children}
-          <Toaster richColors position="top-right" />
-        </QueryProvider>
+        <GoogleOAuthProvider clientId={String(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID)}>
+          <QueryProvider>
+            {children}
+            <Toaster richColors position="top-right" />
+          </QueryProvider>
+        </GoogleOAuthProvider>
       </body>
     </html>
   );

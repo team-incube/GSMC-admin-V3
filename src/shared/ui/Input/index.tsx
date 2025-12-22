@@ -1,9 +1,11 @@
 interface InputProps {
   label?: string;
+  className?: string;
 }
 
 export default function Input({
   label,
+  className,
   ...props
 }: InputProps & React.InputHTMLAttributes<HTMLInputElement>) {
   return (
@@ -11,7 +13,7 @@ export default function Input({
       <label className="text-body1 text-main-700" htmlFor={label}>
         {label}
       </label>
-      <input className="rounded-2xl border border-gray-300 p-4" {...props} id={label} type="text" />
+      <input className={`rounded-2xl border border-gray-300 p-4 ${className}`} id={label} type="text" {...props} />
     </div>
   );
 }

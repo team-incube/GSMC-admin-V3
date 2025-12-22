@@ -1,3 +1,3 @@
-export const PROTECT_PAGE = [];
+export const PROTECT_PAGE = ['/member'];
 
-export const PUBLIC_PAGE = '/';
+export const PUBLIC_PAGE = ['/', '/signup', '/callback'];
