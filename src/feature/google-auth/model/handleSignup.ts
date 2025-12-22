@@ -39,7 +39,7 @@ export async function handleSignup(
 
     return {
       status: 'success',
-      message: '회원가입에 성공했습니다. 다시 로그인해주세요.',
+      message: '회원가입에 성공했습니다. 관리자의 승인을 기다려주세요.',
       fieldErrors: null,
       data: null,
     };
