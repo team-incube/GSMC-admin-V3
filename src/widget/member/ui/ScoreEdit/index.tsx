@@ -19,7 +19,7 @@ export default function ScoreEdit({
 }: ScoreEditProps) {
   const { data: scoreData } = useQuery({
     queryKey: ['scoresByCategory', selectedMember?.id],
-    queryFn: () => getScoresByCategory({ memberId: selectedMember!.id, status: "PENDING" }),
+    queryFn: () => getScoresByCategory({ memberId: selectedMember!.id, status: "APPROVED" }),
     enabled: !!selectedMember,
   });
 
