@@ -1,7 +1,5 @@
 "use client";
 
-import { useRouter } from 'next/navigation';
-
 import Button from '@/shared/ui/Button';
 import { useGetTeacherRequest } from '@/feature/teacher-approve/model/useGetTeacherRequest';
 import { useApproveTeacherRequest } from '@/feature/teacher-approve/model/useApproveTeacherRequest';
@@ -12,11 +10,10 @@ export default function TeacherApproveView() {
   const { data: requestInfo, isLoading } = useGetTeacherRequest();
   const { mutate: approveTeacherRequest } = useApproveTeacherRequest();
   const { mutate: rejectTeacherRequest } = useRejectTeacherRequest();
-  const router = useRouter();
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex w-full p-4 items-center justify-center">
         <p className="text-gray-500">요청 정보를 불러오는 중...</p>
       </div>
     );
@@ -24,11 +21,8 @@ export default function TeacherApproveView() {
 
   if (!requestInfo) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4">
+      <div className="flex w-full p-4 items-center justify-center gap-4">
         <p className="text-gray-500">대기 중인 요청 정보가 없습니다.</p>
-        <Button className="max-w-[200px]" onClick={() => router.push('/')}>
-          홈으로 가기
-        </Button>
       </div>
     );
   }
