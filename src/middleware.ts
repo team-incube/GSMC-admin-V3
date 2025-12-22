@@ -1,13 +1,10 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-
 import axios from 'axios';
-
 import { RoleType, MemberType } from './entities/member/model/member';
 import { AuthTokenType } from './feature/google-auth/model/auth';
 import { COOKIE_CONFIG } from './shared/config/cookie';
 import { PROTECT_PAGE, PUBLIC_PAGE } from './shared/config/protect-page';
-import { setAuthCookies } from './shared/lib/cookie/setAuthCookie';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -18,33 +15,52 @@ export async function middleware(request: NextRequest) {
   const isPublicRoute = PUBLIC_PAGE.includes(currentPath);
   const accessToken = request.cookies.get('accessToken')?.value;
   const refreshToken = request.cookies.get('refreshToken')?.value;
+
   let userRole: RoleType | null = null;
 
   if (accessToken) {
     try {
-      const response = await axios.get<{ data: MemberType }>(`${BACKEND_URL}/members/my`, {
-        headers: {
-          Cookie: `accessToken=${accessToken}`,
-        },
-      });
+      const response = await axios.get<{ data: MemberType }>(
+        `${BACKEND_URL}/members/my`,
+        {
+          headers: {
+            Cookie: `accessToken=${accessToken}`,
+          },
+        }
+      );
       userRole = response.data.data.role;
     } catch {
       userRole = null;
     }
   }
 
-  let newTokens: { accessToken: string; refreshToken: string } | null = null;
-
-  if (!userRole && refreshToken) {
+  if ((!accessToken || !userRole) && refreshToken) {
     try {
       const response = await axios.put<{ data: AuthTokenType }>(
         `${BACKEND_URL}/auth/refresh`,
         {},
-        { headers: { Cookie: `refreshToken=${refreshToken}` } },
+        {
+          headers: { Cookie: `refreshToken=${refreshToken}` },
+          withCredentials: true
+        }
       );
 
       userRole = response?.data.data.role ?? null;
-      newTokens = response?.data?.data ?? null;
+
+      const setCookie = response.headers['set-cookie'];
+
+      if (setCookie && userRole) {
+        const redirectUrl = new URL(request.url);
+        const redirect = NextResponse.redirect(redirectUrl);
+
+        const cookies = Array.isArray(setCookie) ? setCookie : [setCookie];
+
+        cookies.forEach((cookie) => {
+          redirect.headers.append('Set-Cookie', cookie);
+        });
+
+        return redirect;
+      }
     } catch {
       userRole = null;
     }
@@ -59,18 +75,12 @@ export async function middleware(request: NextRequest) {
     }
     if (userRole === 'UNAUTHORIZED') {
       const redirect = NextResponse.redirect(new URL('/signup', request.url));
-      if (newTokens) {
-        await setAuthCookies(newTokens.accessToken, newTokens.refreshToken, redirect);
-      }
       return redirect;
     }
   }
 
   if (isPublicRoute && userRole && userRole !== 'UNAUTHORIZED') {
     const redirect = NextResponse.redirect(new URL('/member', request.url));
-    if (newTokens) {
-      await setAuthCookies(newTokens.accessToken, newTokens.refreshToken, redirect);
-    }
     return redirect;
   }
 
@@ -79,10 +89,6 @@ export async function middleware(request: NextRequest) {
       headers: requestHeaders,
     },
   });
-
-  if (newTokens) {
-    await setAuthCookies(newTokens.accessToken, newTokens.refreshToken, nextResponse);
-  }
 
   return nextResponse;
 }
