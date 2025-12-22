@@ -13,16 +13,23 @@ import type { Member, MemberSearchParams } from '@/feature/member/model/types';
 import { getTotalScore } from '@/feature/member/api/getTotalScore';
 import VolunteerScore from '@/widget/member/ui/VolunteerScoreEdit';
 import AcademicScoreEdit from '@/widget/member/ui/AcademicScoreEdit';
+import { useGetCurrentMember } from '@/entities/member/model/useGetCurrentMember';
 
 export default function MemberView() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isScoreDetailModalOpen, setIsScoreDetailModalOpen] = useState(false);
   const [isPendingScoresModalOpen, setIsPendingScoresModalOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+
+  const { data: currentMember } = useGetCurrentMember();
+
   const [searchParams, setSearchParams] = useState<MemberSearchParams>({
     limit: 20,
     page: 0,
     sortBy: 'ASC',
+    role: 'STUDENT',
+    grade: currentMember?.grade ? currentMember.grade : undefined,
+    classNumber: currentMember?.classNumber ? currentMember.classNumber : undefined,
   });
 
   const { data, isLoading, isError } = useQuery({
