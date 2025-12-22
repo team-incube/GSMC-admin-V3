@@ -56,9 +56,7 @@ export async function middleware(request: NextRequest) {
           },
         });
 
-        const cookies = Array.isArray(setCookie) ? setCookie : [setCookie];
-
-        cookies.forEach((cookie) => {
+        [setCookie].flat().forEach((cookie) => {
           nextResponse.headers.append('Set-Cookie', cookie);
         });
 
