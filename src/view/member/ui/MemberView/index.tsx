@@ -91,8 +91,8 @@ export default function MemberView() {
                   className={cn("cursor-pointer rounded-xl px-8 py-6", selectedMember?.id === member.id && "bg-main-50")}
                 >
                   <div className="flex items-center justify-between">
-                    <p className="text-lg font-semibold text-gray-600">{member.name}</p>
-                    <p className="text-lg font-semibold text-gray-600">
+                    <p className="text-lg font-semibold text-gray-600 tabular-nums">{member.name}</p>
+                    <p className="text-lg font-semibold text-gray-600 tabular-nums">
                       {member.grade}
                       {member.classNumber}
                       {String(member.number).padStart(2, '0')}
