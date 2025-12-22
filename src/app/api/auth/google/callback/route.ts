@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 
 import { AuthTokenType } from '@/feature/google-auth/model/auth';
-import { setAuthCookies } from '@/shared/lib/cookie/setAuthCookie';
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,17 +21,24 @@ export async function POST(request: NextRequest) {
       },
     );
 
-    // 토큰과 역할 추출
-    const { accessToken, refreshToken, role } = response.data.data;
+    // 역할 추출
+    const { role } = response.data.data;
 
-    if (!accessToken) {
-      return NextResponse.json({ error: '토큰을 받지 못했습니다' }, { status: 500 });
+    if (!role) {
+      return NextResponse.json({ error: '역할을 받지 못했습니다' }, { status: 500 });
     }
 
-    // 쿠키 설정
-    await setAuthCookies(accessToken, refreshToken);
+    const nextResponse = NextResponse.json({ success: true, role }, { status: 200 });
 
-    return NextResponse.json({ success: true, role }, { status: 200 });
+    const setCookie = response.headers['set-cookie'];
+    if (setCookie) {
+      const cookies = Array.isArray(setCookie) ? setCookie : [setCookie];
+      cookies.forEach((cookie) => {
+        nextResponse.headers.append('Set-Cookie', cookie);
+      });
+    }
+
+    return nextResponse;
   } catch (error) {
     return NextResponse.json({ error: error }, { status: 500 });
   }

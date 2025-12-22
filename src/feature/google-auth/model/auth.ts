@@ -1,4 +1,4 @@
-import { RoleType } from '@/entities/student/model/student';
+import { RoleType } from '@/entities/member/model/member';
 
 export interface AuthTokenType {
   accessToken: string;
