@@ -8,6 +8,7 @@ import ScoreReviewModal from '@/widget/member/ui/ScoreReviewModal';
 import type { Member } from '@/feature/member/model/types';
 import { usePendingScores } from '@/feature/member/model/hooks/usePendingScores';
 import type { PendingScore } from '@/feature/member/model/domain/pendingScore.type';
+import Button from '@/shared/ui/Button';
 
 interface PendingScoresModalProps {
   isOpen: boolean;
@@ -96,12 +97,13 @@ export default function PendingScoresModal({
                 )}
               </div>
 
-              <button
+              <Button
                 onClick={onClose}
-                className="text-main-500 border-main-500 h-[52px] w-full cursor-pointer rounded-xl border bg-white text-lg font-semibold"
+                variant="border"
+                className="text-main-500 border-main-500 font-semibold"
               >
                 뒤로가기
-              </button>
+              </Button>
             </div>
           </ModalWrapper>
         </div>
