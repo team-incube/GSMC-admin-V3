@@ -45,8 +45,8 @@ export default function TeacherRequestView() {
           <Input name="requestedRole" label="신청 직무" value={requestInfo.requestedRole === 'HOMEROOM_TEACHER' ? '담임 선생님' : '마이스터부 선생님'} readOnly />
           {requestInfo.requestedRole === 'HOMEROOM_TEACHER' && (
             <div className="flex gap-2">
-              <Input className='w-full' name="grade" label="학년" value={String(requestInfo.grade)} readOnly />
-              <Input className='w-full' name="classNumber" label="반" value={String(requestInfo.classNumber)} readOnly />
+              <Input className='w-full' name="grade" label="학년" value={String(requestInfo.grade ?? '')} readOnly />
+              <Input className='w-full' name="classNumber" label="반" value={String(requestInfo.classNumber ?? '')} readOnly />
             </div>
           )}
           <Input name="requestedAt" label="신청 일시" value={formatDate(requestInfo.requestedAt)} readOnly />
