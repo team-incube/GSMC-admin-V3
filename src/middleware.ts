@@ -50,16 +50,19 @@ export async function middleware(request: NextRequest) {
       const setCookie = response.headers['set-cookie'];
 
       if (setCookie && userRole) {
-        const redirectUrl = new URL(request.url);
-        const redirect = NextResponse.redirect(redirectUrl);
+        const nextResponse = NextResponse.next({
+          request: {
+            headers: requestHeaders,
+          },
+        });
 
         const cookies = Array.isArray(setCookie) ? setCookie : [setCookie];
 
         cookies.forEach((cookie) => {
-          redirect.headers.append('Set-Cookie', cookie);
+          nextResponse.headers.append('Set-Cookie', cookie);
         });
 
-        return redirect;
+        return nextResponse;
       }
     } catch {
       userRole = null;
