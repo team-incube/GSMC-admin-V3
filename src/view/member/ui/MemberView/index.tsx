@@ -14,6 +14,7 @@ import { useGetCurrentMember } from '@/entities/member/model/useGetCurrentMember
 import { useGetMemberSearch } from '@/feature/member/model/hooks/useGetMemberSearch';
 import { useGetTotalScore } from '@/feature/member/model/hooks/useGetTotalScore';
 import { cn } from '@/shared/lib/cn';
+import Button from '@/shared/ui/Button';
 
 export default function MemberView() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -138,24 +139,27 @@ export default function MemberView() {
             </div>
 
             <div className="flex flex-col items-center gap-[12px]">
-              <button
+              <Button
+                variant="border"
                 onClick={() => setOpenModal('score')}
-                className="border-main-500 text-main-500 h-[52px] w-[272px] rounded-xl border text-lg font-semibold"
+                className='border-main-500 text-main-500 font-semibold'
               >
                 점수 변경
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="border"
                 onClick={() => setIsScoreDetailModalOpen(true)}
-                className="border-main-500 text-main-500 h-[52px] w-[272px] cursor-pointer rounded-xl border text-lg font-semibold"
+                className="border-main-500 text-main-500 font-semibold"
               >
                 부분 점수 확인
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="border"
                 onClick={() => setIsPendingScoresModalOpen(true)}
-                className="border-main-500 text-main-500 h-[52px] w-[272px] cursor-pointer rounded-xl border text-lg font-semibold"
+                className="border-main-500 text-main-500 font-semibold"
               >
                 심사 요청 확인
-              </button>
+              </Button>
             </div>
           </div>
         ) : (
