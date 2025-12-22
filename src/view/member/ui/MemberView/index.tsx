@@ -1,7 +1,7 @@
 'use client';
 
 import ScoreEdit from '@/widget/member/ui/ScoreEdit';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Filter from '@/shared/asset/svg/Filter';
 import QuestionMark from '@/shared/asset/svg/QuestionMark';
 import MemberSearchModal from '@/widget/member/ui/MemberSearchModal';
@@ -24,6 +24,19 @@ export default function MemberView() {
 
   const { data: currentMember } = useGetCurrentMember();
 
+  useEffect(() => {
+    if (currentMember) {
+      setSearchParams({
+        limit: 20,
+        page: 0,
+        sortBy: 'ASC',
+        role: 'STUDENT',
+        grade: currentMember.grade ? currentMember.grade : undefined,
+        classNumber: currentMember.classNumber ? currentMember.classNumber : undefined,
+      });
+    }
+  }, [currentMember])
+
   const [searchParams, setSearchParams] = useState<MemberSearchParams>({
     limit: 20,
     page: 0,
@@ -33,8 +46,8 @@ export default function MemberView() {
     classNumber: currentMember?.classNumber ? currentMember.classNumber : undefined,
   });
 
-  const { data: members, isLoading: isMemberLoading, isError: isMemberError } = useGetMemberSearch(searchParams);
-  const { data: totalScore, isLoading: isTotalScoreLoading, isError: isTotalScoreError } = useGetTotalScore(selectedMember?.id ?? 0);
+  const { data: members } = useGetMemberSearch(searchParams);
+  const { data: totalScore = { totalScore: 0 } } = useGetTotalScore(selectedMember?.id ?? 0);
 
   const handleSearch = (params: { name?: string; grade?: number; classNumber?: number }) => {
     setSearchParams({
@@ -60,7 +73,7 @@ export default function MemberView() {
             className="cursor-pointer transition-opacity hover:opacity-70"
             aria-label="학생 검색"
           >
-            <Filter />
+            {currentMember?.role === 'TEACHER' && <Filter />}
           </button>
         </div>
 
@@ -120,7 +133,7 @@ export default function MemberView() {
 
             <div className="mb-[47px] flex h-[281px] w-[272px] flex-col items-center justify-center rounded-xl bg-white">
               <div className="text-center">
-                <span className="text-main-700 text-4xl font-semibold">{`${totalScore}점`}</span>
+                <span className="text-main-700 text-4xl font-semibold">{totalScore?.totalScore}점</span>
               </div>
             </div>
 
