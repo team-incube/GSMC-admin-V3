@@ -5,11 +5,11 @@ import { useRouter } from 'next/navigation';
 
 import SignupForm from '@/widget/signup/ui';
 import BackArrow from '@/shared/asset/svg/BackArrow';
-import { useTeacherRequest } from '@/feature/teacher-signup/model/useTeacherRequest';
+import { useGetTeacherMyRequest } from '@/feature/teacher-signup/model/useGetTeacherMyRequest';
 
 export default function SignupView() {
   const router = useRouter();
-  const { data: requestInfo, isLoading } = useTeacherRequest();
+  const { data: requestInfo, isLoading } = useGetTeacherMyRequest();
 
   useEffect(() => {
     if (!isLoading && requestInfo) {
