@@ -19,7 +19,7 @@ export default function TeacherApproveView() {
     );
   }
 
-  if (!requestInfo) {
+  if (!requestInfo || requestInfo.length === 0) {
     return (
       <div className="flex w-full p-4 items-center justify-center gap-4">
         <p className="text-gray-500">대기 중인 요청 정보가 없습니다.</p>
