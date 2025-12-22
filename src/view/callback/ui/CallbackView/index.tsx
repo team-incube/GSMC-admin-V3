@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 import { toast } from 'sonner';
 
 export default function CallbackView() {
@@ -21,15 +21,21 @@ export default function CallbackView() {
 
         if (response.data.role === 'UNAUTHORIZED') {
 
-          const requestInfo = await axios.get('/api/proxy/auth/teacher-signup/my-request');
-          if (requestInfo.data) {
-            toast.success('교직원 승인 대기 중입니다.');
-            router.push('/teacher-request');
-            return;
+          try {
+            const requestInfo = await axios.get('/api/proxy/auth/teacher-signup/my-request');
+            if (requestInfo.data) {
+              toast.success('교직원 승인 대기 중입니다.');
+              router.push('/teacher-request');
+              return;
+            }
+          } catch (error) {
+            if (isAxiosError(error)) {
+              if (error.response?.status === 404) {
+                toast.success('환영합니다! 회원가입을 완료해주세요.');
+                router.push('/signup');
+              }
+            }
           }
-
-          toast.success('환영합니다! 회원가입을 완료해주세요.');
-          router.push('/signup');
         } else {
           toast.success('로그인 성공');
           router.push('/member');
