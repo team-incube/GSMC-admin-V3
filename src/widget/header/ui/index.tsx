@@ -33,7 +33,7 @@ export default function Header() {
           <Bell onClick={() => setIsModalOpen(((prev) => !prev))} className="cursor-pointer" />
         </div>
       </header>
-      {isModalOpen ? <div className="fixed top-[70px] left-1/2 -translate-x-1/2 w-150 z-50 pointer-events-none">
+      {isModalOpen ? <div className="fixed top-[70px] left-[58%] -translate-x-1/2 w-150 z-50 pointer-events-none">
         <div className="pointer-events-auto">
           <AlertsModal />
         </div>
