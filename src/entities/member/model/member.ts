@@ -1,4 +1,4 @@
-export type RoleType = 'UNAUTHORIZED' | 'TEACHER' | 'HOMEROOM_TEACHER' | 'ROOT';
+export type RoleType = 'UNAUTHORIZED' | 'STUDENT' | 'HOMEROOM_TEACHER' | 'TEACHER' | 'ROOT';
 
 export interface MemberType {
   id: number;

@@ -1,6 +1,9 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useGoogleLogin } from '@react-oauth/google';
+import { toast } from 'sonner';
 
 import Image from 'next/image';
 
@@ -9,6 +12,17 @@ import GoogleLogo from '@/shared/asset/svg/GoogleLogo';
 import Button from '@/shared/ui/Button';
 
 export default function IntroView() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  useEffect(() => {
+    const error = searchParams.get('error');
+    if (error === 'student-not-allowed') {
+      toast.warning('학생은 어드민 페이지에 접근할 수 없습니다.');
+      router.replace('/');
+    }
+  }, [searchParams, router]);
+
   const signin = useGoogleLogin({
     flow: 'auth-code',
     ux_mode: "redirect",

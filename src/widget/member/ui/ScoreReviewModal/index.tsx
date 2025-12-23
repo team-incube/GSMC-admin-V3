@@ -32,7 +32,6 @@ export default function ReviewModal({
     scoreDetail,
     hasToeicAcademy,
     isLoading,
-    isProjectCategory,
     isToeicCategory,
     handleFileView: handleFileViewInternal,
   } = useScoreReview({
@@ -90,15 +89,15 @@ export default function ReviewModal({
             <p className="flex justify-end text-sm text-gray-400">
               {member
                 ? `${member.grade}${member.classNumber}${String(member.number).padStart(
-                    2,
-                    '0',
-                  )} ${member.name}`
+                  2,
+                  '0',
+                )} ${member.name}`
                 : ''}
             </p>
           </div>
 
           {score.categoryNames.englishName === 'PROJECT_PARTICIPATION' ||
-          score.categoryNames.englishName === 'PROJECT-PARTICIPATION' ? (
+            score.categoryNames.englishName === 'PROJECT-PARTICIPATION' ? (
             <>
               <ReadOnlyInput
                 label="주제"

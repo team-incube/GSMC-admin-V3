@@ -20,14 +20,11 @@ export async function middleware(request: NextRequest) {
 
   if (accessToken) {
     try {
-      const response = await axios.get<{ data: MemberType }>(
-        `${BACKEND_URL}/members/my`,
-        {
-          headers: {
-            Cookie: `accessToken=${accessToken}`,
-          },
-        }
-      );
+      const response = await axios.get<{ data: MemberType }>(`${BACKEND_URL}/members/my`, {
+        headers: {
+          Cookie: `accessToken=${accessToken}`,
+        },
+      });
       userRole = response.data.data.role;
     } catch {
       userRole = null;
@@ -41,8 +38,8 @@ export async function middleware(request: NextRequest) {
         {},
         {
           headers: { Cookie: `refreshToken=${refreshToken}` },
-          withCredentials: true
-        }
+          withCredentials: true,
+        },
       );
 
       userRole = response?.data.data.role ?? null;
@@ -78,9 +75,13 @@ export async function middleware(request: NextRequest) {
       const redirect = NextResponse.redirect(new URL('/signup', request.url));
       return redirect;
     }
+    if (userRole === 'STUDENT') {
+      const redirect = NextResponse.redirect(new URL('/?error=student-not-allowed', request.url));
+      return redirect;
+    }
   }
 
-  if (isPublicRoute && userRole && userRole !== 'UNAUTHORIZED') {
+  if (isPublicRoute && userRole && userRole !== 'UNAUTHORIZED' && userRole !== 'STUDENT') {
     const redirect = NextResponse.redirect(new URL('/member', request.url));
     return redirect;
   }
