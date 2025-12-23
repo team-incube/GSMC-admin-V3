@@ -47,12 +47,16 @@ export default function Header() {
         </div>
         <div className="flex items-center gap-4">
           <div className="relative">
-            <Bell onClick={() => setIsModalOpen((prev) => !prev)} className="cursor-pointer" />
+            <button type="button" onClick={() => setIsModalOpen((prev) => !prev)} className="cursor-pointer" aria-label="알림 열기">
+              <Bell />
+            </button>
             {isModalOpen ? <div className="absolute right-0 top-full mt-2 z-50">
               <AlertsModal />
             </div> : null}
           </div>
-          <Menu onClick={() => setIsSidebarOpen(true)} className="cursor-pointer md:hidden" />
+          <button type="button" onClick={() => setIsSidebarOpen(true)} className="cursor-pointer md:hidden" aria-label="메뉴 열기">
+            <Menu />
+          </button>
         </div>
       </header>
 
