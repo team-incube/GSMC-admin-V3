@@ -44,26 +44,18 @@ export default function Header() {
             </button>
           </nav>
 
-          {/* Desktop Bell & Mobile Menu */}
-          <div className="flex items-center gap-4">
-            <button type="button" onClick={() => setIsModalOpen((prev) => !prev)} className="cursor-pointer" aria-label="알림 열기">
-              <Bell />
-            </button>
-            <button type="button" onClick={() => setIsSidebarOpen(true)} className="cursor-pointer md:hidden" aria-label="메뉴 열기">
-              <Menu />
-            </button>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <Bell onClick={() => setIsModalOpen((prev) => !prev)} className="cursor-pointer" />
+            {isModalOpen ? <div className="absolute right-0 top-full mt-2 z-50">
+              <AlertsModal />
+            </div> : null}
           </div>
+          <Menu onClick={() => setIsSidebarOpen(true)} className="cursor-pointer md:hidden" />
         </div>
       </header>
 
-      {/* Alerts Modal */}
-      {isModalOpen ? (
-        <div className="pointer-events-none fixed left-1/2 top-[70px] z-50 w-full max-w-[1400px] -translate-x-1/2 px-4 md:px-6 lg:w-150 lg:px-3">
-          <div className="pointer-events-auto">
-            <AlertsModal />
-          </div>
-        </div>
-      ) : null}
 
       {/* Mobile Sidebar */}
       <MobileSidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
