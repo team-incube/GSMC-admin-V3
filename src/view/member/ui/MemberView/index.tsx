@@ -121,13 +121,6 @@ export default function MemberView() {
                     {selectedMember.grade}학년 {selectedMember.classNumber}반{' '}
                     {String(selectedMember.number).padStart(2, '0')}번
                   </p>
-                  <a
-                    href={`${process.env.NEXT_PUBLIC_API_URL}/sheets/class-scores?grade=${selectedMember.grade}&classNumber=${selectedMember.classNumber}`}
-                    download
-                    className="text-sm text-black underline underline-offset-3"
-                  >
-                    엑셀 출력
-                  </a>
                 </div>
               </div>
             </div>
