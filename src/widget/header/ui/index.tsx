@@ -14,32 +14,30 @@ export default function Header() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <>
-      <header className="flex h-[70px] w-full items-center justify-center border-b border-gray-100 bg-white sticky top-0 z-50">
-        <div className="flex w-225 flex-shrink-0 flex-grow-0 items-center justify-between px-3 text-center">
-          <Link href="/member" className="text-main-800 text-xl font-bold">
-            GSMC
-          </Link>
+    <header className="flex h-[70px] w-full items-center justify-center border-b border-gray-100 bg-white sticky top-0 z-50">
+      <div className="flex w-225 flex-shrink-0 flex-grow-0 items-center justify-between px-3 text-center">
+        <Link href="/member" className="text-main-800 text-xl font-bold">
+          GSMC
+        </Link>
 
-          <nav className="flex mx-17 w-full justify-between items-center gap-8 text-sm">
-            <div className="flex gap-8">
-              {HEADER_NAV.map((item) => (
-                <Link key={item.path} className="text-gray-500" href={item.path}>
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-            <button type="button" className="font-semibold cursor-pointer text-gray-900" onClick={signout}>로그아웃</button>
-          </nav>
+        <nav className="flex mx-17 w-full justify-between items-center gap-8 text-sm">
+          <div className="flex gap-8">
+            {HEADER_NAV.map((item) => (
+              <Link key={item.path} className="text-gray-500" href={item.path}>
+                {item.label}
+              </Link>
+            ))}
+          </div>
+          <button type="button" className="font-semibold cursor-pointer text-gray-900" onClick={signout}>로그아웃</button>
+        </nav>
 
+        <div className="relative">
           <Bell onClick={() => setIsModalOpen(((prev) => !prev))} className="cursor-pointer" />
+          {isModalOpen ? <div className="absolute top-full right-0 mt-2 z-50">
+            <AlertsModal />
+          </div> : null}
         </div>
-      </header>
-      {isModalOpen ? <div className="fixed top-[70px] left-[58%] -translate-x-1/2 w-150 z-50 pointer-events-none">
-        <div className="pointer-events-auto">
-          <AlertsModal />
-        </div>
-      </div> : null}
-    </>
+      </div>
+    </header>
   );
 }
