@@ -26,7 +26,6 @@ export default function Header() {
             GSMC
           </Link>
 
-          {/* Desktop Navigation */}
           <nav className="hidden mx-17 w-full justify-between items-center gap-8 text-sm md:flex">
             <div className="flex gap-8">
               {HEADER_NAV.map((item) => (
@@ -44,24 +43,22 @@ export default function Header() {
             </button>
           </nav>
 
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="relative">
-            <button type="button" onClick={() => setIsModalOpen((prev) => !prev)} className="cursor-pointer" aria-label="알림 열기">
-              <Bell />
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <button type="button" onClick={() => setIsModalOpen((prev) => !prev)} className="cursor-pointer" aria-label="알림 열기">
+                <Bell />
+              </button>
+              {isModalOpen ? <div className="absolute right-0 top-full mt-2 z-50">
+                <AlertsModal />
+              </div> : null}
+            </div>
+            <button type="button" onClick={() => setIsSidebarOpen(true)} className="cursor-pointer md:hidden" aria-label="메뉴 열기">
+              <Menu />
             </button>
-            {isModalOpen ? <div className="absolute right-0 top-full mt-2 z-50">
-              <AlertsModal />
-            </div> : null}
           </div>
-          <button type="button" onClick={() => setIsSidebarOpen(true)} className="cursor-pointer md:hidden" aria-label="메뉴 열기">
-            <Menu />
-          </button>
         </div>
       </header>
 
-
-      {/* Mobile Sidebar */}
       <MobileSidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
     </>
   );
