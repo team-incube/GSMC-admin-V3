@@ -4,6 +4,7 @@ import type { Member } from '@/feature/member/model/types';
 import { toast } from 'sonner';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import Button from '@/shared/ui/Button';
 
 interface ScoreEditModalProps {
   title: string;
@@ -77,20 +78,22 @@ export default function ScoreEditModal({
         </div>
 
         <div className="flex flex-col gap-3">
-          <button
+          <Button
             onClick={onBack}
-            className="border-main-500 text-main-500 h-[52px] w-[380px] rounded-xl border text-lg font-semibold"
+            variant="border"
+            className="border-main-500 text-main-500 font-semibold"
           >
             뒤로가기
-          </button>
+          </Button>
 
-          <button
+          <Button
             onClick={handleSubmit}
             disabled={isPending}
-            className="bg-main-500 h-[52px] w-[380px] rounded-xl text-lg font-semibold text-white disabled:opacity-50"
+            variant="active"
+            className="font-semibold"
           >
             변경 완료
-          </button>
+          </Button>
         </div>
       </div>
     </div>
