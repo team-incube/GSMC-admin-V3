@@ -43,8 +43,8 @@ export default function MemberView() {
     page: 0,
     sortBy: 'ASC',
     role: 'STUDENT',
-    grade: currentMember?.grade ? currentMember.grade : undefined,
-    classNumber: currentMember?.classNumber ? currentMember.classNumber : undefined,
+    grade: undefined,
+    classNumber: undefined,
   });
 
   const { data: members } = useGetMemberSearch(searchParams);
