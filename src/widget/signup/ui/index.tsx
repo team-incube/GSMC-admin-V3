@@ -75,8 +75,6 @@ export default function SignupForm() {
               label="학년"
               type="number"
               placeholder="학년을 입력해주세요 (1-3)"
-              min={1}
-              max={3}
             />
             <small className="text-error pl-1">{state.fieldErrors?.grade}</small>
           </div>
@@ -85,9 +83,7 @@ export default function SignupForm() {
               name="classNumber"
               label="반"
               type="number"
-              placeholder="반을 입력해주세요 (1-3)"
-              min={1}
-              max={3}
+              placeholder="반을 입력해주세요 (1-4)"
             />
             <small className="text-error pl-1">{state.fieldErrors?.classNumber}</small>
           </div>

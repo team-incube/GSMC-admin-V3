@@ -2,13 +2,13 @@
 
 import { useRouter } from 'next/navigation';
 
-import { useTeacherRequest } from '@/feature/teacher-signup/model/useTeacherRequest';
+import { useGetTeacherMyRequest } from '@/feature/teacher-signup/model/useGetTeacherMyRequest';
 import Button from '@/shared/ui/Button';
 import { formatDate } from '@/shared/lib/formatDate';
 import Input from '@/shared/ui/Input';
 
 export default function TeacherRequestView() {
-  const { data: requestInfo, isLoading } = useTeacherRequest();
+  const { data: requestInfo, isLoading } = useGetTeacherMyRequest();
   const router = useRouter();
 
   if (isLoading) {

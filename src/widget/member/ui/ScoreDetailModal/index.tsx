@@ -14,7 +14,7 @@ interface ScoreDetailModalProps {
 export default function ScoreDetailModal({ isOpen, onClose, memberId }: ScoreDetailModalProps) {
   const { data, isLoading, error } = useQuery({
     queryKey: ['scoresByCategory', memberId],
-    queryFn: () => getScoresByCategory(memberId!),
+    queryFn: () => getScoresByCategory({ memberId: memberId! }),
     enabled: !!memberId && isOpen,
   });
 

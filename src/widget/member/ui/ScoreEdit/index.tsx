@@ -2,6 +2,7 @@ import ChangeButton from '@/shared/ui/ChangeButton';
 import { getScoresByCategory } from '@/feature/member/api/getScoresByCategory';
 import { Member, ScoreCategoryType } from '@/feature/member/model/types';
 import { useQuery } from '@tanstack/react-query';
+import Button from '@/shared/ui/Button';
 
 interface ScoreEditProps {
   selectedMember: Member;
@@ -18,7 +19,7 @@ export default function ScoreEdit({
 }: ScoreEditProps) {
   const { data: scoreData } = useQuery({
     queryKey: ['scoresByCategory', selectedMember?.id],
-    queryFn: () => getScoresByCategory(selectedMember!.id),
+    queryFn: () => getScoresByCategory({ memberId: selectedMember!.id, status: "APPROVED" }),
     enabled: !!selectedMember,
   });
 
@@ -65,12 +66,13 @@ export default function ScoreEdit({
           ))}
         </div>
 
-        <button
+        <Button
           onClick={onClose}
-          className="border-main-500 text-main-500 h-[52px] w-[480px] rounded-xl border text-lg font-semibold"
+          variant='border'
+          className="border-main-500 text-main-500 font-semibold"
         >
           뒤로가기
-        </button>
+        </Button>
       </div>
     </div>
   );
