@@ -47,6 +47,8 @@ async function proxyRequest(request: NextRequest, method: string) {
       signal: AbortSignal.timeout(30000),
     });
 
+    // console.log(response)
+
     if (response.status === 204) {
       return NextResponse.json(null, { status: 200 });
     }
@@ -56,6 +58,30 @@ async function proxyRequest(request: NextRequest, method: string) {
       const data = await response.json();
       return NextResponse.json(data, {
         status: response.status,
+      });
+    } else if (
+      responseContentType?.includes('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') ||
+      responseContentType?.includes('application/vnd.ms-excel') ||
+      responseContentType?.includes('application/octet-stream') ||
+      responseContentType?.includes('application/pdf') ||
+      responseContentType?.includes('image/') ||
+      responseContentType?.includes('video/') ||
+      responseContentType?.includes('audio/')
+    ) {
+      const buffer = await response.arrayBuffer();
+
+      const responseHeaders: HeadersInit = {
+        'Content-Type': responseContentType || 'application/octet-stream',
+      };
+
+      const contentDisposition = response.headers.get('content-disposition');
+      if (contentDisposition) {
+        responseHeaders['Content-Disposition'] = contentDisposition;
+      }
+
+      return new NextResponse(buffer, {
+        status: response.status,
+        headers: responseHeaders,
       });
     } else {
       const text = await response.text();
