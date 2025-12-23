@@ -26,16 +26,18 @@ export default function Header() {
             GSMC
           </Link>
 
-          <nav className="hidden items-center gap-8 text-sm md:flex">
-            {HEADER_NAV.map((item) => (
-              <Link
-                key={item.path}
-                className={pathname === item.path ? 'font-semibold text-main-800' : 'text-gray-500'}
-                href={item.path}
-              >
-                {item.label}
-              </Link>
-            ))}
+          <nav className="hidden mx-17 w-full justify-between items-center gap-8 text-sm md:flex">
+            <div className="flex gap-8">
+              {HEADER_NAV.map((item) => (
+                <Link
+                  key={item.path}
+                  className={pathname === item.path ? 'font-semibold text-main-800' : 'text-gray-500'}
+                  href={item.path}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
             <button type="button" className="cursor-pointer font-semibold text-gray-900" onClick={signout}>
               로그아웃
             </button>
