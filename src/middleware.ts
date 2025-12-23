@@ -76,7 +76,7 @@ export async function middleware(request: NextRequest) {
       return redirect;
     }
     if (userRole === 'STUDENT') {
-      const redirect = NextResponse.redirect(new URL('/', request.url));
+      const redirect = NextResponse.redirect(new URL('/?error=student-not-allowed', request.url));
       return redirect;
     }
   }
