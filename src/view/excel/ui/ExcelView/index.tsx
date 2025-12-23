@@ -2,7 +2,7 @@
 
 import { useGetCurrentMember } from "@/entities/member/model/useGetCurrentMember";
 import { useDownloadSheetsScores } from "@/entities/member/model/useDownloadSheetsScores";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import NumberButton from "@/shared/ui/NumberButton";
 import Button from "@/shared/ui/Button";
 import { toast } from "sonner";
@@ -11,8 +11,15 @@ import { cn } from "@/shared/lib/cn";
 export default function ExcelView() {
   const { data: currentMember, isLoading: isLoadingCurrentMember } = useGetCurrentMember();
   const { mutate: downloadScores, isPending: isDownloading } = useDownloadSheetsScores();
-  const [selectedGrade, setSelectedGrade] = useState<number | null>(currentMember?.role === 'HOMEROOM_TEACHER' ? Number(currentMember.grade) : null);
-  const [selectedClass, setSelectedClass] = useState<number | undefined>(currentMember?.role === 'HOMEROOM_TEACHER' ? Number(currentMember.classNumber) : undefined);
+  const [selectedGrade, setSelectedGrade] = useState<number | null>(null);
+  const [selectedClass, setSelectedClass] = useState<number | undefined>(undefined);
+
+  useEffect(() => {
+    if (currentMember?.role === 'HOMEROOM_TEACHER') {
+      setSelectedGrade(Number(currentMember.grade));
+      setSelectedClass(Number(currentMember.classNumber));
+    }
+  }, [currentMember]);
 
   const GRADES = [1, 2, 3];
   const CLASSES = [1, 2, 3, 4];
