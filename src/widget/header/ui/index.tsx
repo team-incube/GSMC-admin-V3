@@ -22,11 +22,13 @@ export default function Header() {
           </Link>
 
           <nav className="flex mx-17 w-full justify-between items-center gap-8 text-sm">
-            {HEADER_NAV.map((item) => (
-              <Link key={item.path} className="text-gray-500" href={item.path}>
-                {item.label}
-              </Link>
-            ))}
+            <div className="flex gap-8">
+              {HEADER_NAV.map((item) => (
+                <Link key={item.path} className="text-gray-500" href={item.path}>
+                  {item.label}
+                </Link>
+              ))}
+            </div>
             <button type="button" className="font-semibold cursor-pointer text-gray-900" onClick={signout}>로그아웃</button>
           </nav>
 
