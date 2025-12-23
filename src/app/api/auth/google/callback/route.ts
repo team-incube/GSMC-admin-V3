@@ -17,7 +17,8 @@ export async function POST(request: NextRequest) {
     const response = await axios.post<{ data: AuthTokenType }>(
       `${process.env.NEXT_PUBLIC_API_URL}/auth`,
       {
-        code,
+        code: code,
+        redirectUri: process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI,
       },
     );
 
