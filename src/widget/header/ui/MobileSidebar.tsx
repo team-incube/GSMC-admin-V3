@@ -32,7 +32,9 @@ export default function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
           <Link href="/member" className="text-xl font-bold text-main-800" onClick={onClose}>
             GSMC
           </Link>
-          <Close onClick={onClose} className="cursor-pointer" />
+          <button type="button" onClick={onClose} className="cursor-pointer" aria-label="메뉴 닫기">
+            <Close />
+          </button>
         </div>
 
         <nav className="flex flex-col gap-2 p-4">
