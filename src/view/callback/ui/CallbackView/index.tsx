@@ -44,9 +44,11 @@ export default function CallbackView() {
           router.push('/member');
         }
       } catch (error) {
-        if (isAxiosError(error) && error.response?.data?.message) {
-          if (error.response.status === HttpStatusCode.Forbidden) {
+        if (isAxiosError(error)) {
+          if (error.response?.status === HttpStatusCode.Forbidden) {
             toast.error("학교 계정으로 로그인해주세요.");
+          } else {
+            toast.error(error.response?.data?.message || '로그인에 실패했습니다. 다시 시도해주세요.');
           }
         } else {
           toast.error('로그인에 실패했습니다. 다시 시도해주세요.');
