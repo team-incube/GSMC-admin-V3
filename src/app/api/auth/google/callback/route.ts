@@ -13,6 +13,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Authorization code is missing' }, { status: 400 });
     }
 
+    console.log("google/callback:", {
+      code: code,
+      redirectUri: process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI,
+    });
+
     // 백엔드 API 호출 - 디코딩된 code 전송
     const response = await axios.post<{ data: AuthTokenType }>(
       `${process.env.NEXT_PUBLIC_API_URL}/auth`,
