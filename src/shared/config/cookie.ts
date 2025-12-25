@@ -7,6 +7,7 @@ export const COOKIE_CONFIG = {
       maxAge: 60 * 60,
       path: '/',
       sameSite: 'lax' as const,
+      domain: process.env.NODE_ENV === 'production' ? '.gsmc.io.kr' : undefined,
     },
   },
   refreshToken: {
@@ -17,6 +18,7 @@ export const COOKIE_CONFIG = {
       maxAge: 60 * 60 * 24 * 7,
       path: '/',
       sameSite: 'lax' as const,
+      domain: process.env.NODE_ENV === 'production' ? '.gsmc.io.kr' : undefined,
     },
   },
 };
