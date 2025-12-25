@@ -1,11 +1,10 @@
 "use client"
 
-import { useState, useTransition } from 'react';
+import { useState } from 'react';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
-import { signout } from '@/feature/google-auth/lib/signout';
 import Bell from '@/shared/asset/svg/Bell';
 import Menu from '@/shared/asset/svg/Menu';
 import AlertsModal from '@/widget/main/ui/AlertsModal';
@@ -16,13 +15,11 @@ import MobileSidebar from './MobileSidebar';
 export default function Header() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isPending, startTransition] = useTransition();
   const pathname = usePathname();
+  const router = useRouter();
 
   const handleSignout = () => {
-    startTransition(async () => {
-      await signout();
-    });
+    router.push('/api/auth/logout');
   };
 
   return (
@@ -45,8 +42,8 @@ export default function Header() {
                 </Link>
               ))}
             </div>
-            <button type="button" className="cursor-pointer font-semibold text-gray-900 disabled:opacity-50" onClick={handleSignout} disabled={isPending}>
-              {isPending ? '로그아웃 중...' : '로그아웃'}
+            <button type="button" className="cursor-pointer font-semibold text-gray-900 disabled:opacity-50" onClick={handleSignout}>
+              로그아웃
             </button>
           </nav>
 

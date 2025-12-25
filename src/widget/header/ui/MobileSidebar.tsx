@@ -1,11 +1,10 @@
 'use client';
 
-import { useTransition } from 'react';
+import { } from 'react';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
-import { signout } from '@/feature/google-auth/lib/signout';
 import Close from '@/shared/asset/svg/Close';
 
 import { HEADER_NAV } from '../config/navigation';
@@ -17,13 +16,10 @@ interface MobileSidebarProps {
 
 export default function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
   const pathname = usePathname();
-  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   const handleSignout = () => {
-    startTransition(async () => {
-      await signout();
-      onClose();
-    });
+    router.push('/api/auth/logout');
   };
 
   return (
@@ -52,8 +48,8 @@ export default function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
               key={item.path}
               href={item.path}
               className={`rounded-lg px-4 py-3 ${pathname === item.path
-                  ? 'bg-main-50 font-semibold text-main-800'
-                  : 'text-gray-700 hover:bg-gray-50'
+                ? 'bg-main-50 font-semibold text-main-800'
+                : 'text-gray-700 hover:bg-gray-50'
                 }`}
               onClick={onClose}
             >
@@ -65,11 +61,10 @@ export default function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
         <div className="absolute bottom-4 left-0 right-0 px-4">
           <button
             type="button"
-            className="w-full cursor-pointer rounded-lg bg-gray-100 px-4 py-3 font-semibold text-gray-900 hover:bg-gray-200 disabled:opacity-50"
+            className="w-full cursor-pointer rounded-lg bg-gray-100 px-4 py-3 font-semibold text-gray-900 hover:bg-gray-200"
             onClick={handleSignout}
-            disabled={isPending}
           >
-            {isPending ? '로그아웃 중...' : '로그아웃'}
+            로그아웃
           </button>
         </div>
       </div>
