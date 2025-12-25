@@ -47,7 +47,10 @@ export default function MemberView() {
     classNumber: undefined,
   });
 
-  const { data: members } = useGetMemberSearch(searchParams);
+  const { data: members, isLoading: isMembersLoading } = useGetMemberSearch(
+    searchParams,
+    !!currentMember,
+  );
   const { data: totalScore = { totalScore: 0 } } = useGetTotalScore(selectedMember?.id ?? 0);
 
   const handleSearch = (params: { name?: string; grade?: number; classNumber?: number }) => {
@@ -79,7 +82,11 @@ export default function MemberView() {
         </div>
 
         <div className="flex-1 overflow-y-auto px-10 pb-6">
-          {members?.members.length === 0 ? (
+          {isMembersLoading ? (
+            <div className="flex h-full items-center justify-center">
+              <p className="text-main-700 text-2xl font-bold animate-pulse">학생 목록을 불러오는 중...</p>
+            </div>
+          ) : members?.members.length === 0 ? (
             <div className="flex h-full items-center justify-center">
               <p className="text-main-700 text-2xl font-bold">조건에 맞는 학생이 없습니다.</p>
             </div>
