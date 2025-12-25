@@ -1,7 +1,5 @@
 'use client';
 
-import { } from 'react';
-
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
