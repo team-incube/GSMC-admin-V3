@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 
-import axios, { isAxiosError } from 'axios';
+import axios, { HttpStatusCode, isAxiosError } from 'axios';
 import { toast } from 'sonner';
 
 export default function CallbackView() {
@@ -44,7 +44,13 @@ export default function CallbackView() {
           router.push('/member');
         }
       } catch (error) {
-        toast.error(`로그인에 실패했습니다. 다시 시도해주세요. ${error}`);
+        if (isAxiosError(error) && error.response?.data?.message) {
+          if (error.response.status === HttpStatusCode.Forbidden) {
+            toast.error("학교 계정으로 로그인해주세요.");
+          }
+        } else {
+          toast.error('로그인에 실패했습니다. 다시 시도해주세요.');
+        }
         router.push('/');
       }
     };
