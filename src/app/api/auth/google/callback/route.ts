@@ -46,6 +46,24 @@ export async function POST(request: NextRequest) {
 
     return nextResponse;
   } catch (error) {
-    return NextResponse.json({ error: error }, { status: 500 });
+    if (axios.isAxiosError(error)) {
+      console.error('Google Auth Error Detail:', {
+        status: error.response?.status,
+        message: error.response?.data?.message || error.response?.data,
+        config: {
+          url: error.config?.url,
+          data: error.config?.data,
+        }
+      });
+      return NextResponse.json(
+        {
+          error: 'Authentication failed',
+          details: error.response?.data || error.message,
+        },
+        { status: error.response?.status || 500 },
+      );
+    }
+    console.error('Unknown Auth Error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
