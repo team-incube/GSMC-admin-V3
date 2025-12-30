@@ -65,7 +65,7 @@ export default function PendingScoresModal({
                       return (
                         <div
                           key={score.scoreId}
-                          className="flex items-center justify-between border-b border-gray-400 px-5 py-6"
+                          className="flex items-center justify-between border-b last:border-none border-gray-400 px-5 py-6"
                         >
                           <div className="flex items-center gap-[12px]">
                             <p className="text-lg font-semibold text-gray-600">
