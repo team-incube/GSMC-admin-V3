@@ -139,13 +139,13 @@ export default function MemberView() {
             </div>
 
             <div className="flex flex-col items-center gap-[12px]">
-              <Button
+              {/* <Button
                 variant="border"
                 onClick={() => setOpenModal('score')}
                 className='border-main-500 text-main-500 font-semibold'
               >
                 점수 변경
-              </Button>
+              </Button> */}
               <Button
                 variant="border"
                 onClick={() => setIsScoreDetailModalOpen(true)}
@@ -191,30 +191,30 @@ export default function MemberView() {
         member={selectedMember}
       />
 
-      {openModal === 'score' && selectedMember ? (
+      {/* {openModal === 'score' && selectedMember ? (
         <ScoreEdit
           selectedMember={selectedMember}
           onClose={() => setOpenModal(null)}
           onOpenVolunteer={() => setOpenModal('volunteer')}
           onOpenAcademic={() => setOpenModal('academic')}
         />
-      ) : null}
+      ) : null} */}
 
-      {openModal === 'volunteer' && selectedMember ? (
+      {/* {openModal === 'volunteer' && selectedMember ? (
         <VolunteerScore
           selectedMember={selectedMember}
           onBack={() => setOpenModal('score')}
           onSaveSuccess={() => setOpenModal('score')}
         />
-      ) : null}
+      ) : null} */}
 
-      {openModal === 'academic' && selectedMember ? (
+      {/* {openModal === 'academic' && selectedMember ? (
         <AcademicScoreEdit
           selectedMember={selectedMember}
           onBack={() => setOpenModal('score')}
           onSaveSuccess={() => setOpenModal('score')}
         />
-      ) : null}
+      ) : null} */}
     </div>
   );
 }
