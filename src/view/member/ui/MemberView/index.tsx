@@ -5,7 +5,7 @@ import Filter from '@/shared/asset/svg/Filter';
 import QuestionMark from '@/shared/asset/svg/QuestionMark';
 import MemberSearchModal from '@/widget/member/ui/MemberSearchModal';
 import ScoreDetailModal from '@/widget/member/ui/ScoreDetailModal';
-import PendingScoresModal from '@/widget/member/ui/PendingScoresModal';
+import ScoreListModal from '@/widget/member/ui/ScoreListModal';
 import { useGetCurrentMember } from '@/entities/member/model/useGetCurrentMember';
 import { useGetMemberSearch } from '@/entities/member/model/useGetMemberSearch';
 import { useGetTotalScore } from '@/entities/score/model/useGetTotalScoreById';
@@ -18,7 +18,7 @@ import { getSearchStudentRequest } from '@/entities/member/api/getMemberSearch';
 export default function MemberView() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isScoreDetailModalOpen, setIsScoreDetailModalOpen] = useState(false);
-  const [isPendingScoresModalOpen, setIsPendingScoresModalOpen] = useState(false);
+  const [isScoreListModalOpen, setIsScoreListModalOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<MemberType | null>(null);
   const [searchParams, setSearchParams] = useState<getSearchStudentRequest | typeof skipToken>(skipToken);
   const { data: currentMember } = useGetCurrentMember();
@@ -139,7 +139,7 @@ export default function MemberView() {
               </Button>
               <Button
                 variant="border"
-                onClick={() => setIsPendingScoresModalOpen(true)}
+                onClick={() => setIsScoreListModalOpen(true)}
                 className="border-main-500 text-main-500 font-semibold"
               >
                 심사 요청 확인
@@ -169,9 +169,9 @@ export default function MemberView() {
       />
 
       {
-        selectedMember ? <PendingScoresModal
-          isOpen={isPendingScoresModalOpen}
-          onClose={() => setIsPendingScoresModalOpen(false)}
+        selectedMember ? <ScoreListModal
+          isOpen={isScoreListModalOpen}
+          onClose={() => setIsScoreListModalOpen(false)}
           member={selectedMember}
         /> : null
       }

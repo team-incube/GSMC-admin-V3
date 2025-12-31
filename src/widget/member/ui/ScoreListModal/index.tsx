@@ -12,17 +12,17 @@ import ReviewModal from '../ScoreReviewModal';
 import { ScoreType } from '@/entities/score/model/score';
 import { formatDate } from '@/shared/lib/formatDate';
 
-interface PendingScoresModalProps {
+interface ScoreListModalProps {
   isOpen: boolean;
   onClose: () => void;
   member: MemberType
 }
 
-export default function PendingScoresModal({
+export default function ScoreListModal({
   isOpen,
   onClose,
   member,
-}: PendingScoresModalProps) {
+}: ScoreListModalProps) {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [selectedScore, setSelectedScore] = useState<ScoreType | null>(null);
   const { data: scores, isLoading, isError } = useGetScoresByCategoryById({ memberId: member.id });
