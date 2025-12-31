@@ -1,7 +1,7 @@
 "use client"
 
 import { useGetCurrentMember } from "@/entities/member/model/useGetCurrentMember";
-import { useDownloadSheetsScores } from "@/entities/member/model/useDownloadSheetsScores";
+import { useDownloadSheetsScores } from "@/entities/score/model/useDownloadSheetsScores";
 import { useState, useEffect } from "react";
 import NumberButton from "@/shared/ui/NumberButton";
 import Button from "@/shared/ui/Button";

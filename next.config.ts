@@ -8,6 +8,16 @@ const nextConfig: NextConfig = {
       allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',') ?? [],
     },
   },
+  images: {
+    remotePatterns: process.env.S3_IMAGE_HOSTNAME
+      ? [
+          {
+            protocol: 'https',
+            hostname: process.env.S3_IMAGE_HOSTNAME,
+          },
+        ]
+      : [],
+  },
 };
 
 export default nextConfig;
