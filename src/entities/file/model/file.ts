@@ -1,4 +1,4 @@
-export interface FileInfo {
+export interface FileType {
   id: number;
   memberId: number;
   originalName: string;
