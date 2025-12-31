@@ -1,0 +1,70 @@
+name-template: 'v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
+version-template: $MAJOR.$MINOR.$PATCH
+
+categories:
+  - title: '✨ 새로운 기능'
+    labels:
+      - 'feat'
+  - title: '🔄 기능 수정'
+    labels:
+      - 'change'
+  - title: '♻️ 리팩토링'
+    labels:
+      - 'refactor'
+  - title: '🐛 버그 수정'
+    labels:
+      - 'fix'
+  - title: '🗑️ 삭제'
+    labels:
+      - 'remove'
+  - title: '📝 문서'
+    labels:
+      - 'docs'
+  - title: '🔧 기타'
+    labels:
+      - 'chore'
+
+version-resolver:
+  minor:
+    labels:
+      - 'feat'
+      - 'remove'
+  default: patch
+
+exclude-labels:
+  - 'skip-changelog'
+
+change-template: '- $TITLE (#$NUMBER) @$AUTHOR'
+change-title-escapes: '\<*_&'
+
+autolabeler:
+  - label: 'feat'
+    title:
+      - '/^feat(\(.+\))?:/i'
+  - label: 'change'
+    title:
+      - '/^change(\(.+\))?:/i'
+  - label: 'refactor'
+    title:
+      - '/^refactor(\(.+\))?:/i'
+  - label: 'fix'
+    title:
+      - '/^fix(\(.+\))?:/i'
+  - label: 'remove'
+    title:
+      - '/^remove(\(.+\))?:/i'
+  - label: 'docs'
+    title:
+      - '/^docs(\(.+\))?:/i'
+  - label: 'chore'
+    title:
+      - '/^chore(\(.+\))?:/i'
+
+template: |
+  ## 변경사항
+
+  $CHANGES
+
+  ## 전체 변경 이력
+  **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
