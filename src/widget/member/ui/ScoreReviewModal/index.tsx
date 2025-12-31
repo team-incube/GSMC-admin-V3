@@ -92,6 +92,7 @@ export default function ReviewModal({
             <FileUploader
               label="첨부된 파일"
               uploadedFiles={scores?.file ? [scores?.file] : []}
+              readOnly
             />
             {
               !isRejectMode && scores?.rejectionReason ? (
