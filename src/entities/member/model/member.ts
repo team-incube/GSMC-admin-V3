@@ -4,10 +4,16 @@ export interface MemberType {
   id: number;
   name: string;
   email: string;
-  grade: number | null;
+  grade: number;
+  classNumber: number;
+  number: number;
+  role: RoleType;
+}
+
+export interface TeacherType extends Omit<MemberType, 'grade' | 'classNumber' | 'number'> {
+  gradegrade: number | null;
   classNumber: number | null;
   number: number | null;
-  role: RoleType;
 }
 
 export interface RequestMemberType {
