@@ -1,65 +1,56 @@
 'use client';
 
-import ScoreEdit from '@/widget/member/ui/ScoreEdit';
 import { useEffect, useState } from 'react';
 import Filter from '@/shared/asset/svg/Filter';
 import QuestionMark from '@/shared/asset/svg/QuestionMark';
 import MemberSearchModal from '@/widget/member/ui/MemberSearchModal';
 import ScoreDetailModal from '@/widget/member/ui/ScoreDetailModal';
-import PendingScoresModal from '@/widget/member/ui/PendingScoresModal';
-import type { Member, MemberSearchParams } from '@/feature/member/model/types';
-import VolunteerScore from '@/widget/member/ui/VolunteerScoreEdit';
-import AcademicScoreEdit from '@/widget/member/ui/AcademicScoreEdit';
+import ScoreListModal from '@/widget/member/ui/ScoreListModal';
 import { useGetCurrentMember } from '@/entities/member/model/useGetCurrentMember';
-import { useGetMemberSearch } from '@/feature/member/model/hooks/useGetMemberSearch';
-import { useGetTotalScore } from '@/feature/member/model/hooks/useGetTotalScore';
+import { useGetMemberSearch } from '@/entities/member/model/useGetMemberSearch';
+import { useGetTotalScore } from '@/entities/score/model/useGetTotalScoreById';
 import { cn } from '@/shared/lib/cn';
 import Button from '@/shared/ui/Button';
+import { MemberType } from '@/entities/member/model/member';
+import { skipToken } from '@tanstack/react-query';
+import { getSearchStudentRequest } from '@/entities/member/api/getMemberSearch';
 
 export default function MemberView() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isScoreDetailModalOpen, setIsScoreDetailModalOpen] = useState(false);
-  const [isPendingScoresModalOpen, setIsPendingScoresModalOpen] = useState(false);
-  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
-  const [openModal, setOpenModal] = useState<'score' | 'volunteer' | 'academic' | null>(null);
-
+  const [isScoreListModalOpen, setIsScoreListModalOpen] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<MemberType | null>(null);
+  const [searchParams, setSearchParams] = useState<getSearchStudentRequest | typeof skipToken>(skipToken);
   const { data: currentMember } = useGetCurrentMember();
+
+  const canFetchMembers = !!currentMember;
 
   useEffect(() => {
     if (currentMember) {
       setSearchParams({
-        limit: 20,
-        page: 0,
-        sortBy: 'ASC',
-        role: 'STUDENT',
-        grade: currentMember.grade ? currentMember.grade : undefined,
-        classNumber: currentMember.classNumber ? currentMember.classNumber : undefined,
+        classNumber: currentMember.classNumber ?? undefined,
+        grade: currentMember.grade ?? undefined,
+        role: "STUDENT",
+        sortBy: "ASC",
       });
     }
-  }, [currentMember])
-
-  const [searchParams, setSearchParams] = useState<MemberSearchParams>({
-    limit: 20,
-    page: 0,
-    sortBy: 'ASC',
-    role: 'STUDENT',
-    grade: undefined,
-    classNumber: undefined,
-  });
+  }, [currentMember]);
 
   const { data: members, isLoading: isMembersLoading } = useGetMemberSearch(
-    searchParams,
-    !!currentMember,
+    canFetchMembers ? searchParams : skipToken
   );
-  const { data: totalScore = { totalScore: 0 } } = useGetTotalScore(selectedMember?.id ?? 0);
 
-  const handleSearch = (params: { name?: string; grade?: number; classNumber?: number }) => {
-    setSearchParams({
-      ...searchParams,
-      ...params,
-      page: 0,
-    });
-    setIsModalOpen(false);
+  const { data: totalScore = { totalScore: 0 } } = useGetTotalScore({ memberId: selectedMember?.id ?? 0, includeApprovedOnly: true });
+
+  const handleSearch = ({ classNumber, grade }: getSearchStudentRequest) => {
+    if (classNumber || grade) {
+      setSearchParams({
+        classNumber,
+        grade,
+        role: "STUDENT",
+        sortBy: "ASC",
+      });
+    }
   };
 
   return (
@@ -92,7 +83,7 @@ export default function MemberView() {
             </div>
           ) : (
             <div className="flex flex-col gap-0">
-              {members?.members.map((member: Member) => (
+              {members?.members.map((member) => (
                 <div
                   key={member.id}
                   onClick={() => setSelectedMember(member)}
@@ -113,14 +104,14 @@ export default function MemberView() {
         </div>
       </section>
 
-      <section className="col-span-5 bg-main-100 flex h-184.75 flex-col justify-center overflow-hidden rounded-2xl px-[39px] pt-[36px] pb-[42px]">
+      <section className="col-span-5 bg-main-100 flex h-184.75 flex-col justify-center overflow-hidden rounded-2xl px-[39px] pt-9 pb-[42px]">
         {selectedMember ? (
           <div className="flex h-full flex-col">
-            <h2 className="text-main-700 mb-[56px] text-2xl font-semibold">인적사항</h2>
+            <h2 className="text-main-700 mb-14 text-2xl font-semibold">인적사항</h2>
 
-            <div className="mb-[20px] w-full px-1">
+            <div className="mb-5 w-full px-1">
               <div className="flex flex-col">
-                <p className="mb-[8px] text-lg font-semibold text-gray-600">
+                <p className="mb-2 text-lg font-semibold text-gray-600">
                   {selectedMember.name}
                 </p>
                 <div className="flex w-full items-center justify-between">
@@ -138,24 +129,17 @@ export default function MemberView() {
               </div>
             </div>
 
-            <div className="flex flex-col items-center gap-[12px]">
-              {/* <Button
-                variant="border"
-                onClick={() => setOpenModal('score')}
-                className='border-main-500 text-main-500 font-semibold'
-              >
-                점수 변경
-              </Button> */}
+            <div className="flex flex-col items-center gap-3">
               <Button
                 variant="border"
                 onClick={() => setIsScoreDetailModalOpen(true)}
                 className="border-main-500 text-main-500 font-semibold"
               >
-                부분 점수 확인
+                영역별 점수 확인
               </Button>
               <Button
                 variant="border"
-                onClick={() => setIsPendingScoresModalOpen(true)}
+                onClick={() => setIsScoreListModalOpen(true)}
                 className="border-main-500 text-main-500 font-semibold"
               >
                 심사 요청 확인
@@ -184,37 +168,13 @@ export default function MemberView() {
         memberId={selectedMember?.id ?? null}
       />
 
-      <PendingScoresModal
-        isOpen={isPendingScoresModalOpen}
-        onClose={() => setIsPendingScoresModalOpen(false)}
-        memberId={selectedMember?.id ?? null}
-        member={selectedMember}
-      />
-
-      {/* {openModal === 'score' && selectedMember ? (
-        <ScoreEdit
-          selectedMember={selectedMember}
-          onClose={() => setOpenModal(null)}
-          onOpenVolunteer={() => setOpenModal('volunteer')}
-          onOpenAcademic={() => setOpenModal('academic')}
-        />
-      ) : null} */}
-
-      {/* {openModal === 'volunteer' && selectedMember ? (
-        <VolunteerScore
-          selectedMember={selectedMember}
-          onBack={() => setOpenModal('score')}
-          onSaveSuccess={() => setOpenModal('score')}
-        />
-      ) : null} */}
-
-      {/* {openModal === 'academic' && selectedMember ? (
-        <AcademicScoreEdit
-          selectedMember={selectedMember}
-          onBack={() => setOpenModal('score')}
-          onSaveSuccess={() => setOpenModal('score')}
-        />
-      ) : null} */}
+      {
+        selectedMember ? <ScoreListModal
+          isOpen={isScoreListModalOpen}
+          onClose={() => setIsScoreListModalOpen(false)}
+          member={selectedMember}
+        /> : null
+      }
     </div>
   );
 }

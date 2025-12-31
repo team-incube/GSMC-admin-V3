@@ -7,7 +7,7 @@ import { usePathname, useRouter } from 'next/navigation';
 
 import Bell from '@/shared/asset/svg/Bell';
 import Menu from '@/shared/asset/svg/Menu';
-import AlertsModal from '@/widget/main/ui/AlertsModal';
+import AlertsModal from '@/widget/member/ui/AlertsModal';
 
 import { HEADER_NAV } from '../config/navigation';
 import MobileSidebar from './MobileSidebar';
