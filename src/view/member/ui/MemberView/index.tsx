@@ -42,15 +42,17 @@ export default function MemberView() {
 
   const { data: totalScore = { totalScore: 0 } } = useGetTotalScore({ memberId: selectedMember?.id ?? 0, includeApprovedOnly: true });
 
-  const handleSearch = () => {
-    if (!currentMember) return;
-    setSearchParams({
-      classNumber: currentMember.classNumber ?? undefined,
-      grade: currentMember.grade ?? undefined,
-      role: "STUDENT",
-      sortBy: "ASC",
-    });
+  const handleSearch = ({ classNumber, grade }: getSearchStudentRequest) => {
+    if (classNumber || grade) {
+      setSearchParams({
+        classNumber,
+        grade,
+        role: "STUDENT",
+        sortBy: "ASC",
+      });
+    }
   };
+
   return (
     <div className="w-full grid grid-cols-12 mt-12.5 gap-7.5">
       <section className="col-span-7 bg-main-100 flex h-184.75 flex-col overflow-hidden rounded-2xl">
