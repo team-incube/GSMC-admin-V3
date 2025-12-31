@@ -1,124 +1,129 @@
 'use client';
 
-import { useState } from 'react';
 
 import ModalWrapper from '@/shared/ui/ModalWrapper';
-import ScoreReviewModal from '@/widget/member/ui/ScoreReviewModal';
 
-import type { Member } from '@/feature/member/model/types';
-import { usePendingScores } from '@/feature/member/model/hooks/usePendingScores';
-import type { PendingScore } from '@/feature/member/model/domain/pendingScore.type';
+import type { MemberType } from '@/entities/member/model/member';
+import { useGetScoresByCategoryById } from '@/entities/score/model/useGetScoresByCategoryById';
 import Button from '@/shared/ui/Button';
+import { cn } from '@/shared/lib/cn';
+import { useState } from 'react';
+import ReviewModal from '../ScoreReviewModal';
+import { ScoreType } from '@/entities/score/model/score';
+import { formatDate } from '@/shared/lib/formatDate';
 
 interface PendingScoresModalProps {
   isOpen: boolean;
   onClose: () => void;
-  memberId: number | null;
-  member: Member | null;
+  member: MemberType
 }
 
 export default function PendingScoresModal({
   isOpen,
   onClose,
-  memberId,
   member,
 }: PendingScoresModalProps) {
-  const [selectedScore, setSelectedScore] = useState<PendingScore | null>(null);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [selectedScore, setSelectedScore] = useState<ScoreType | null>(null);
+  const { data: scores, isLoading, isError } = useGetScoresByCategoryById({ memberId: member.id });
 
-  const { scores, isLoading, error, isUnread, markAsViewed } = usePendingScores(memberId, isOpen);
+  const [showPendingModal, setShowPendingModal] = useState(true);
 
-  if (!isOpen) return null;
+  const handleReviewClick = (score: ScoreType) => {
+    setSelectedScore(score);
+    setIsReviewModalOpen(true);
+    setShowPendingModal(false);
+  };
+
+  const handleReviewBack = () => {
+    setIsReviewModalOpen(false);
+    setSelectedScore(null);
+    setShowPendingModal(true);
+  };
 
   return (
-    <>
-      {!isReviewModalOpen && (
-        <div className="fixed inset-0 z-50" onClick={onClose}>
-          <ModalWrapper className="w-[600px] px-15 py-10">
-            <div onClick={(e) => e.stopPropagation()}>
-              <h2 className="text-main-700 mb-3 text-2xl font-semibold">심사 요청</h2>
+    isOpen && showPendingModal ? (
+      <ModalWrapper className="flex flex-col gap-4 w-full max-w-150 px-15 py-10" onClose={onClose}>
+        <h2 className="text-main-700 mb-3 text-2xl font-semibold">심사 요청</h2>
 
-              <div className="mb-[30px] max-h-[378px] overflow-y-auto rounded-xl border border-gray-400">
-                {isLoading ? (
-                  <div className="flex justify-center py-8">
-                    <p className="text-gray-600">로딩중...</p>
-                  </div>
-                ) : error ? (
-                  <div className="flex justify-center py-8">
-                    <p className="text-red-600">데이터를 불러오는데 실패했습니다</p>
-                  </div>
-                ) : scores.length === 0 ? (
-                  <div className="flex justify-center py-8">
-                    <p className="text-gray-600">심사 대기 중인 항목이 없습니다</p>
-                  </div>
-                ) : (
-                  <div className="flex flex-col">
-                    {scores.map((score) => {
-                      const date =
-                        score.updatedAt &&
-                        new Date(score.updatedAt).toLocaleDateString('ko-KR', {
-                          year: 'numeric',
-                          month: '2-digit',
-                          day: '2-digit',
-                        });
-
-                      return (
-                        <div
-                          key={score.scoreId}
-                          className="flex items-center justify-between border-b last:border-none border-gray-400 px-5 py-6"
-                        >
-                          <div className="flex items-center gap-[12px]">
-                            <p className="text-lg font-semibold text-gray-600">
-                              {score.categoryName}
-                            </p>
-                            {score.scoreStatus === 'PENDING' && isUnread(score.scoreId) && (
-                              <span className="h-2 w-2 rounded-full bg-red-500" />
-                            )}
-                          </div>
-
-                          <div className="flex items-center gap-[16px]">
-                            {date ? <p className="text-base text-gray-500">{date}</p> : null}
-                            <button
-                              className="text-main-500 border-main-500 cursor-pointer rounded-lg border px-3 py-1 text-lg leading-[26px] font-semibold"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedScore(score);
-                                setIsReviewModalOpen(true);
-                                markAsViewed(score.scoreId);
-                              }}
-                            >
-                              보기
-                            </button>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-
-              <Button
-                onClick={onClose}
-                variant="border"
-                className="text-main-500 border-main-500 font-semibold"
-              >
-                뒤로가기
-              </Button>
+        <div className="mb-[30px] max-h-[378px] overflow-y-auto rounded-xl border border-gray-400">
+          {isLoading ? (
+            <div className="flex justify-center py-8 h-full min-h-100">
+              <p className="text-gray-600">로딩중...</p>
             </div>
-          </ModalWrapper>
-        </div>
-      )}
+          ) : isError ? (
+            <div className="flex justify-center py-8">
+              <p className="text-red-600">데이터를 불러오는데 실패했습니다</p>
+            </div>
+          ) : scores?.length === 0 ? (
+            <div className="flex justify-center py-8">
+              <p className="text-gray-600">심사 대기 중인 항목이 없습니다</p>
+            </div>
+          ) : (
+            <div className="flex flex-col">
+              {scores?.map((category) => (
+                <div key={category.categoryType} className="w-full flex flex-col">
+                  <div className="flex justify-between px-5 py-2 bg-gray-50 text-sm font-bold text-gray-500">
+                    <p>{category.categoryNames.koreanName}</p>
+                  </div>
+                  {category.scores.length === 0 ? (
+                    <div className="flex justify-center py-4">
+                      <p className="text-gray-600">심사 대기 중인 항목이 없습니다</p>
+                    </div>
+                  ) : (category.scores.map((score) => (
+                    <article
+                      key={score.scoreId}
+                      className="flex justify-between items-center w-full px-5 py-4 border-b border-gray-100 last:border-none gap-3"
+                    >
+                      <div className="flex items-center gap-3 min-w-0 flex-1">
+                        <div className={cn(
+                          "w-2 h-2 shrink-0 rounded-full",
+                          {
+                            "bg-main-500": score.scoreStatus === "APPROVED",
+                            "bg-gray-600": score.scoreStatus === "PENDING",
+                            "bg-error": score.scoreStatus === "REJECTED"
+                          }
+                        )} />
+                        <p className="text-body2 wrap-break-word overflow-hidden">
+                          {score.activityName || score.categoryNames.koreanName}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-body2 text-black/40 wrap-break-word overflow-hidden">
+                          {formatDate(score.updatedAt)}
+                        </p>
+                      </div>
+                      <Button
+                        variant="border"
+                        className="w-auto px-3 py-0.5 shrink-0"
+                        onClick={() => handleReviewClick(score)}
+                      >
+                        보기
+                      </Button>
+                    </article>
+                  )))}
 
-      <ScoreReviewModal
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <Button
+          onClick={onClose}
+          variant="border"
+          className="text-main-500 border-main-500 font-semibold"
+        >
+          뒤로가기
+        </Button>
+      </ModalWrapper>
+    ) : (selectedScore && isReviewModalOpen ? (
+      <ReviewModal
         isOpen={isReviewModalOpen}
-        onClose={() => {
-          setIsReviewModalOpen(false);
-          setSelectedScore(null);
-        }}
+        onClose={handleReviewBack}
         score={selectedScore}
-        memberId={memberId}
         member={member}
       />
-    </>
+    ) : null)
   );
 }
