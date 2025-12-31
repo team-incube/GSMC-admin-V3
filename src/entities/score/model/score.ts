@@ -13,6 +13,7 @@ export interface ScoreType {
   file: FileType | null;
   scoreValue: number;
   rejectionReason: string | null;
+  updatedAt: string;
 }
 
 export interface TotalScoreType {
