@@ -1,6 +1,6 @@
 import { instance } from '@/shared/lib/instance';
 
-export interface rejectScoreReequest {
+export interface rejectScoreRequest {
   scoreId: number;
   rejectionReason: string;
 }
@@ -8,7 +8,7 @@ export interface rejectScoreReequest {
 export const rejectScore = async ({
   scoreId,
   rejectionReason,
-}: rejectScoreReequest): Promise<void> => {
+}: rejectScoreRequest): Promise<void> => {
   const response = await instance.patch(`/scores/${scoreId}/reject`, {
     rejectionReason,
   });
