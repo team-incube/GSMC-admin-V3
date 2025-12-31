@@ -1,15 +1,15 @@
 import { instance } from '@/shared/lib/instance';
 import { CategoryScoresGroupType, ScoreStatus } from '@/entities/score/model/score';
 
-export interface getScoresByCategoryRequest {
+export interface getScoresByCategoryByIdRequest {
   memberId: number;
   status?: ScoreStatus;
 }
 
-export const getScoresByCategory = async ({
+export const getScoresByCategoryById = async ({
   memberId,
   status,
-}: getScoresByCategoryRequest): Promise<CategoryScoresGroupType[]> => {
+}: getScoresByCategoryByIdRequest): Promise<CategoryScoresGroupType[]> => {
   const res = await instance.get(`/scores/by-category/${memberId}`, {
     params: {
       status,
