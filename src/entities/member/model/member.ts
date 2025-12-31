@@ -11,7 +11,7 @@ export interface MemberType {
 }
 
 export interface TeacherType extends Omit<MemberType, 'grade' | 'classNumber' | 'number'> {
-  gradegrade: number | null;
+  grade: number | null;
   classNumber: number | null;
   number: number | null;
 }
