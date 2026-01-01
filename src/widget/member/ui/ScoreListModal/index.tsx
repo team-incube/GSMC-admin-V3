@@ -113,7 +113,7 @@ export default function ScoreListModal({
           onClick={onClose}
           variant="border"
           className="text-main-500 border-main-500 font-semibold"
-        >
+        >ㅁ
           뒤로가기
         </Button>
       </ModalWrapper>
