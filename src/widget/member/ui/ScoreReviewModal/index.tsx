@@ -309,7 +309,7 @@ export default function ReviewModal({
   };
 
   return isOpen ? (
-    <ModalWrapper className="w-full flex flex-col gap-4 max-w-150 px-25 py-15" onClose={onClose}>
+    <ModalWrapper className="w-full flex flex-col gap-4 max-w-150 max-h-200 px-25 py-15" onClose={onClose}>
       <div className="mb-7 flex flex-col justify-center">
         <h2 className="flex justify-center text-[32px] font-semibold text-gray-900">
           {scores?.categoryNames.koreanName}
@@ -324,20 +324,22 @@ export default function ReviewModal({
         </p>
       </div>
 
-      {renderCategoryInputs()}
+      <div className="flex flex-col h-full overflow-y-auto">
+        {renderCategoryInputs()}
 
-      {!isRejectMode && scores?.rejectionReason ? (
-        <Textarea label="작성된 반려 사유" value={scores.rejectionReason} readOnly disabled />
-      ) : null}
+        {!isRejectMode && scores?.rejectionReason ? (
+          <Textarea label="작성된 반려 사유" value={scores.rejectionReason} readOnly disabled />
+        ) : null}
 
-      {isRejectMode ? (
-        <Textarea
-          label="반려 사유"
-          value={rejectionReason}
-          onChange={(e) => setRejectionReason(e.target.value)}
-          placeholder="반려 사유를 입력해주세요"
-        />
-      ) : null}
+        {isRejectMode ? (
+          <Textarea
+            label="반려 사유"
+            value={rejectionReason}
+            onChange={(e) => setRejectionReason(e.target.value)}
+            placeholder="반려 사유를 입력해주세요"
+          />
+        ) : null}
+      </div>
 
       <div className="flex flex-col gap-3">
         {!isRejectMode ? (
