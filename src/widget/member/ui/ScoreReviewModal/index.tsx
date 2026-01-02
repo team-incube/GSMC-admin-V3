@@ -274,7 +274,7 @@ export default function ReviewModal({
           <Textarea label="내용" value={scores.evidence?.content || ''} readOnly disabled />
           <FileUploader
             label="첨부된 파일"
-            uploadedFiles={scores.file ? [scores.file] : []}
+            uploadedFiles={scores.evidence?.files ? scores.evidence.files : []}
             readOnly
           />
         </>
@@ -324,7 +324,7 @@ export default function ReviewModal({
         </p>
       </div>
 
-      <div className="flex flex-col h-full overflow-y-auto">
+      <div className="flex flex-col gap-4 h-full overflow-y-auto">
         {renderCategoryInputs()}
 
         {!isRejectMode && scores?.rejectionReason ? (
