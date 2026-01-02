@@ -10,7 +10,8 @@ interface ScoreDetailModalProps {
 }
 
 export default function ScoreDetailModal({ isOpen, onClose, memberId }: ScoreDetailModalProps) {
-  const { data: categories, isLoading, isError } = useGetScoresByCategoryById({ memberId: memberId! });
+  const { data: categories, isLoading, isError } = useGetScoresByCategoryById({ memberId: memberId, status: "APPROVED" });
+
 
   return (
     isOpen ?
