@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 import { FileType } from '@/entities/file/model/file';
 import Close from '@/shared/asset/svg/Close';
+import Download from '@/shared/asset/svg/Download';
 import File from '@/shared/asset/svg/File';
 import LeftArrow from '@/shared/asset/svg/LeftArrow';
 import RightArrow from '@/shared/asset/svg/RightArrow';
@@ -32,6 +33,25 @@ const FileList: React.FC<FileListProps> = ({ files, onRemove }) => {
     window.addEventListener('resize', updateArrows);
     return () => window.removeEventListener('resize', updateArrows);
   }, [files]);
+
+  const handleDownload = async (fileUri: string, fileName: string) => {
+    try {
+      const response = await fetch(fileUri);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Download failed:', error);
+      // 다운로드 실패 시 새 탭에서 열기
+      window.open(fileUri, '_blank');
+    }
+  };
 
   if (files.length === 0) return null;
 
@@ -108,20 +128,28 @@ const FileList: React.FC<FileListProps> = ({ files, onRemove }) => {
                     <Close width={20} height={20} />
                   </span>
                 </button> : null}
-                <p className="text-xs text-gray-600 mt-1 truncate">{file.originalName}</p>
+                <button
+                  onClick={() => handleDownload(file.uri, file.originalName)}
+                  className="text-sm text-gray-600 mt-1 line-clamp-1 truncate flex items-center gap-1 cursor-pointer hover:text-blue-600 text-left w-full"
+                >
+                  <Download width={16} height={16} color="currentColor" className="shrink-0" />
+                  <span className="truncate">{file.originalName}</span>
+                </button>
               </div>
             ))}
           </div>
 
-          {showArrows.right ? <button
-            onClick={() => handleScroll('right')}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white bg-opacity-90 hover:bg-opacity-100 rounded-full p-2 shadow-lg cursor-pointer"
-            type="button"
-          >
-            <span className="flex items-center justify-center">
-              <RightArrow width={20} height={20} />
-            </span>
-          </button> : null}
+          {
+            showArrows.right ? <button
+              onClick={() => handleScroll('right')}
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white bg-opacity-90 hover:bg-opacity-100 rounded-full p-2 shadow-lg cursor-pointer"
+              type="button"
+            >
+              <span className="flex items-center justify-center">
+                <RightArrow width={20} height={20} />
+              </span>
+            </button> : null
+          }
         </div>
       )}
 
@@ -151,9 +179,13 @@ const FileList: React.FC<FileListProps> = ({ files, onRemove }) => {
                   <Close width={20} height={20} />
                 </span>
               </button> : null}
-              <Link href={file.uri || '#'} className="text-sm text-gray-600 mt-1 line-clamp-1 truncate block">
-                {file.originalName}
-              </Link>
+              <button
+                onClick={() => handleDownload(file.uri || '#', file.originalName)}
+                className="text-sm text-gray-600 mt-1 line-clamp-1 truncate flex items-center gap-1 cursor-pointer hover:text-blue-600 text-left w-full"
+              >
+                <Download width={16} height={16} color="currentColor" className="shrink-0" />
+                <span className="truncate">{file.originalName}</span>
+              </button>
             </div>
           ))}
         </div>
