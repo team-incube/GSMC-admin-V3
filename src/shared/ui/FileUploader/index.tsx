@@ -55,7 +55,6 @@ export default function FileUploader({
     displayFiles,
     buttonText,
     handleFileChange,
-    handleRemoveFile,
   } = useFileUploaderState({ uploadedFiles, isMultiple, onChange });
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -95,7 +94,7 @@ export default function FileUploader({
 
       <hr className="mt-6 mb-8" />
 
-      <FileList files={displayFiles} onRemove={handleRemoveFile} />
+      <FileList files={displayFiles} />
 
       <div className="hidden">
         {existingFiles.map((file) => (
