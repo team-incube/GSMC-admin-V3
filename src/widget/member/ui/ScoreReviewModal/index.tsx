@@ -11,7 +11,7 @@ import Textarea from '@/shared/ui/Textarea';
 import Dropdown from '@/shared/ui/Dropdown';
 import { useApproveScore } from '@/entities/score/model/useApproveScore';
 import { useRejectScore } from '@/entities/score/model/useRejectScore';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useGetScoreById } from '@/entities/score/model/useGetScoreById';
 import Link from 'next/link';
 
@@ -33,6 +33,12 @@ export default function ReviewModal({
   const [rejectionReason, setRejectionReason] = useState(scores?.rejectionReason || '');
   const { mutate: approve, isPending: isApproving } = useApproveScore();
   const { mutate: reject, isPending: isRejecting } = useRejectScore();
+
+  useEffect(() => {
+    if (scores) {
+      setRejectionReason(scores.rejectionReason || '');
+    }
+  }, [scores]);
 
   const handleApprove = () => {
     approve(
