@@ -78,6 +78,7 @@ export default function ReviewModal({ isOpen, onClose, score, member }: ReviewMo
         onClick={() => {
           setIsFileViewerModal(true);
         }}
+        className="cursor-pointer"
       >
         {categoryCase({ englishName, value, scores })}
       </div>
