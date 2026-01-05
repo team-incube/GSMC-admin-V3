@@ -36,11 +36,6 @@ export default function FileViewerModal({ onClose, fileUrl, englishName }: FileV
       return <iframe src={fileUrl.uri} className="h-120 w-full" />;
     }
 
-    // 텍스트 / CSV
-    if (['.txt', '.csv'].includes(ext!)) {
-      return <iframe src={fileUrl.uri} className="h-120 w-full" />;
-    }
-
     // Office 문서
     if (['.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx'].includes(ext!)) {
       return (
@@ -53,8 +48,8 @@ export default function FileViewerModal({ onClose, fileUrl, englishName }: FileV
       );
     }
 
-    // HWP / HWPX
-    if (['.hwp', '.hwpx'].includes(ext!)) {
+    // HWP / HWPX / 텍스트 / CSV
+    if (['.hwp', '.hwpx', '.txt', '.csv'].includes(ext!)) {
       return (
         <div className="flex h-120 flex-col items-center justify-center gap-4">
           <p className="text-gray-500">해당 파일 형식은 미리보기를 지원하지 않습니다.</p>
