@@ -11,9 +11,9 @@ import Textarea from '@/shared/ui/Textarea';
 import Dropdown from '@/shared/ui/Dropdown';
 import { useApproveScore } from '@/entities/score/model/useApproveScore';
 import { useRejectScore } from '@/entities/score/model/useRejectScore';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useGetScoreById } from '@/entities/score/model/useGetScoreById';
-import Link from 'next/link';
+import FileViewerModal from '../FileViewerModal';
 
 interface ReviewModalProps {
   isOpen: boolean;
@@ -22,17 +22,20 @@ interface ReviewModalProps {
   member: MemberType;
 }
 
-export default function ReviewModal({
-  isOpen,
-  onClose,
-  score,
-  member,
-}: ReviewModalProps) {
+interface CategoryCaseProps {
+  englishName: string;
+  value: string;
+  scores: ScoreType;
+}
+
+export default function ReviewModal({ isOpen, onClose, score, member }: ReviewModalProps) {
   const [isRejectMode, setIsRejectMode] = useState(false);
   const { data: scores } = useGetScoreById({ scoreId: score.scoreId });
   const [rejectionReason, setRejectionReason] = useState(scores?.rejectionReason || '');
   const { mutate: approve, isPending: isApproving } = useApproveScore();
   const { mutate: reject, isPending: isRejecting } = useRejectScore();
+
+  const [isFileViewerModal, setIsFileViewerModal] = useState<boolean>(false);
 
   useEffect(() => {
     if (scores) {
@@ -48,7 +51,7 @@ export default function ReviewModal({
           onClose();
           setIsRejectMode(false);
         },
-      }
+      },
     );
   };
 
@@ -60,7 +63,7 @@ export default function ReviewModal({
           onClose();
           setIsRejectMode(false);
         },
-      }
+      },
     );
   };
 
@@ -70,6 +73,19 @@ export default function ReviewModal({
     const englishName = scores.categoryNames.englishName;
     const value = scores.activityName || scores.scoreValue?.toString() || '';
 
+    return (
+      <div
+        onClick={() => {
+          setIsFileViewerModal(true);
+        }}
+        className="cursor-pointer"
+      >
+        {categoryCase({ englishName, value, scores })}
+      </div>
+    );
+  };
+
+  const categoryCase = ({ englishName, value, scores }: CategoryCaseProps) => {
     // 1. 자격증 (Certificate)
     if (englishName === 'CERTIFICATE') {
       return (
@@ -126,7 +142,7 @@ export default function ReviewModal({
               { label: 'N5', value: '5' },
             ]}
             value={value}
-            onChange={() => { }}
+            onChange={() => {}}
             disabled
           />
           <FileUploader
@@ -147,7 +163,7 @@ export default function ReviewModal({
             id="toeicAcademy"
             checked={value === 'true'}
             disabled
-            className="h-4 w-4 accent-main-500"
+            className="accent-main-500 h-4 w-4"
           />
           <label htmlFor="toeicAcademy" className="text-sm font-medium">
             토익 사관학교 수료
@@ -172,7 +188,7 @@ export default function ReviewModal({
               { label: '월계관', value: '7' },
             ]}
             value={value}
-            onChange={() => { }}
+            onChange={() => {}}
             disabled
           />
           <FileUploader
@@ -203,7 +219,7 @@ export default function ReviewModal({
               { label: '5등급', value: '5' },
             ]}
             value={value}
-            onChange={() => { }}
+            onChange={() => {}}
             disabled
           />
           <FileUploader
@@ -261,7 +277,7 @@ export default function ReviewModal({
               { label: '9등급', value: '9' },
             ]}
             value={value}
-            onChange={() => { }}
+            onChange={() => {}}
             disabled
           />
           <p className="text-xs text-gray-500">
@@ -276,7 +292,12 @@ export default function ReviewModal({
     if (englishName === 'PROJECT-PARTICIPATION') {
       return (
         <>
-          <Input label="주제" value={scores.evidence?.title || scores.activityName || ''} readOnly disabled />
+          <Input
+            label="주제"
+            value={scores.evidence?.title || scores.activityName || ''}
+            readOnly
+            disabled
+          />
           <Textarea label="내용" value={scores.evidence?.content || ''} readOnly disabled />
           <FileUploader
             label="첨부된 파일"
@@ -305,91 +326,102 @@ export default function ReviewModal({
     return (
       <>
         <Input label={scores.categoryNames.koreanName} value={value} readOnly disabled />
-        {scores.file ? <FileUploader
-          label="파일 첨부"
-          uploadedFiles={[scores.file]}
-          readOnly
-        /> : null}
+        {scores.file ? (
+          <FileUploader label="파일 첨부" uploadedFiles={[scores.file]} readOnly />
+        ) : null}
       </>
     );
   };
 
   return isOpen ? (
-    <ModalWrapper className="w-full flex flex-col gap-4 max-w-150 max-h-200 px-25 py-15" onClose={onClose}>
-      <div className="mb-7 flex flex-col justify-center">
-        <h2 className="flex justify-center text-[32px] font-semibold text-gray-900">
-          {scores?.categoryNames.koreanName}
-        </h2>
-        <p className="flex justify-end text-sm text-gray-400 tabular-nums">
-          {getStudentCode({
-            grade: member.grade,
-            classNumber: member.classNumber,
-            number: member.number,
-          })}{' '}
-          {member.name}
-        </p>
-      </div>
+    <>
+      <ModalWrapper
+        className="flex max-h-200 w-full max-w-150 flex-col gap-4 px-25 py-15"
+        onClose={onClose}
+      >
+        <div className="mb-7 flex flex-col justify-center">
+          <h2 className="flex justify-center text-[32px] font-semibold text-gray-900">
+            {scores?.categoryNames.koreanName}
+          </h2>
+          <p className="flex justify-end text-sm text-gray-400 tabular-nums">
+            {getStudentCode({
+              grade: member.grade,
+              classNumber: member.classNumber,
+              number: member.number,
+            })}{' '}
+            {member.name}
+          </p>
+        </div>
 
-      <div className="flex flex-col gap-4 h-full overflow-y-auto">
-        {renderCategoryInputs()}
+        <div className="flex h-full flex-col gap-4 overflow-y-auto">
+          {renderCategoryInputs()}
 
-        {!isRejectMode && scores?.rejectionReason ? (
-          <Textarea label="작성된 반려 사유" value={scores.rejectionReason} readOnly disabled />
-        ) : null}
+          {!isRejectMode && scores?.rejectionReason ? (
+            <Textarea label="작성된 반려 사유" value={scores.rejectionReason} readOnly disabled />
+          ) : null}
 
-        {isRejectMode ? (
-          <Textarea
-            label="반려 사유"
-            value={rejectionReason}
-            onChange={(e) => setRejectionReason(e.target.value)}
-            placeholder="반려 사유를 입력해주세요"
-          />
-        ) : null}
-      </div>
+          {isRejectMode ? (
+            <Textarea
+              label="반려 사유"
+              value={rejectionReason}
+              onChange={(e) => setRejectionReason(e.target.value)}
+              placeholder="반려 사유를 입력해주세요"
+            />
+          ) : null}
+        </div>
 
-      <div className="flex flex-col gap-3">
-        {!isRejectMode ? (
-          <>
-            <button
-              onClick={() => onClose()}
-              className="text-main-500 border-main-500 h-12 w-full cursor-pointer rounded-lg border bg-white text-base font-medium"
-            >
-              뒤로가기
-            </button>
+        <div className="flex flex-col gap-3">
+          {!isRejectMode ? (
+            <>
+              <button
+                onClick={() => onClose()}
+                className="text-main-500 border-main-500 h-12 w-full cursor-pointer rounded-lg border bg-white text-base font-medium"
+              >
+                뒤로가기
+              </button>
+              <div className="flex gap-3">
+                <button
+                  onClick={handleApprove}
+                  disabled={isApproving}
+                  className="bg-main-500 h-12 flex-1 cursor-pointer rounded-lg text-base font-semibold text-white disabled:opacity-50"
+                >
+                  {isApproving ? '처리 중...' : '통과'}
+                </button>
+                <button
+                  onClick={() => setIsRejectMode(true)}
+                  className="bg-error h-12 flex-1 cursor-pointer rounded-lg text-base font-semibold text-white"
+                >
+                  탈락
+                </button>
+              </div>
+            </>
+          ) : (
             <div className="flex gap-3">
               <button
-                onClick={handleApprove}
-                disabled={isApproving}
-                className="bg-main-500 h-12 flex-1 cursor-pointer rounded-lg text-base font-semibold text-white disabled:opacity-50"
+                onClick={() => setIsRejectMode(false)}
+                className="text-main-500 border-main-500 h-12 w-full cursor-pointer rounded-lg border bg-white text-base font-medium"
               >
-                {isApproving ? '처리 중...' : '통과'}
+                뒤로가기
               </button>
               <button
-                onClick={() => setIsRejectMode(true)}
-                className="bg-error h-12 flex-1 cursor-pointer rounded-lg text-base font-semibold text-white"
+                onClick={handleReject}
+                disabled={isRejecting}
+                className="bg-main-500 h-12 w-full cursor-pointer rounded-lg text-base font-semibold text-white disabled:opacity-50"
               >
-                탈락
+                {isRejecting ? '처리 중...' : '완료'}
               </button>
             </div>
-          </>
-        ) : (
-          <div className="flex gap-3">
-            <button
-              onClick={() => setIsRejectMode(false)}
-              className="text-main-500 border-main-500 h-12 w-full cursor-pointer rounded-lg border bg-white text-base font-medium"
-            >
-              뒤로가기
-            </button>
-            <button
-              onClick={handleReject}
-              disabled={isRejecting}
-              className="bg-main-500 h-12 w-full cursor-pointer rounded-lg text-base font-semibold text-white disabled:opacity-50"
-            >
-              {isRejecting ? '처리 중...' : '완료'}
-            </button>
-          </div>
-        )}
-      </div>
-    </ModalWrapper>
+          )}
+        </div>
+      </ModalWrapper>
+
+      {isFileViewerModal ? (
+        <FileViewerModal
+          onClose={() => setIsFileViewerModal(false)}
+          fileUrl={scores!.file!}
+          englishName={scores!.categoryNames!.englishName!}
+        />
+      ) : null}
+    </>
   ) : null;
 }
