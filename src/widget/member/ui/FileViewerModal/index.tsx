@@ -27,7 +27,9 @@ export default function FileViewerModal({ onClose, fileUrl, englishName }: FileV
     // 이미지
     if (['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp'].includes(ext!)) {
       return (
-        <img src={fileUrl.uri} alt={englishName} className="max-h-120 w-full object-contain" />
+        <div className="rounded-lg bg-black">
+          <img src={fileUrl.uri} alt={englishName} className="max-h-120 w-full object-contain" />
+        </div>
       );
     }
 
