@@ -1,6 +1,5 @@
 'use client';
 
-
 import ModalWrapper from '@/shared/ui/ModalWrapper';
 
 import type { MemberType } from '@/entities/member/model/member';
@@ -15,14 +14,10 @@ import { formatDate } from '@/shared/lib/formatDate';
 interface ScoreListModalProps {
   isOpen: boolean;
   onClose: () => void;
-  member: MemberType
+  member: MemberType;
 }
 
-export default function ScoreListModal({
-  isOpen,
-  onClose,
-  member,
-}: ScoreListModalProps) {
+export default function ScoreListModal({ isOpen, onClose, member }: ScoreListModalProps) {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [selectedScore, setSelectedScore] = useState<ScoreType | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -69,12 +64,18 @@ export default function ScoreListModal({
         />
       ) : (
         isOpen && (
-          <ModalWrapper className="flex flex-col gap-4 w-full max-w-150 px-15 py-10" onClose={handleCloseModal}>
+          <ModalWrapper
+            className="flex w-full max-w-150 flex-col gap-4 px-15 py-10"
+            onClose={handleCloseModal}
+          >
             <h2 className="text-main-700 mb-3 text-2xl font-semibold">심사 요청</h2>
 
-            <div ref={scrollRef} className="mb-[30px] max-h-[378px] overflow-y-auto rounded-xl border border-gray-400">
+            <div
+              ref={scrollRef}
+              className="mb-[30px] max-h-[378px] overflow-y-auto rounded-xl border border-gray-400"
+            >
               {isLoading ? (
-                <div className="flex justify-center py-8 h-full min-h-100">
+                <div className="flex h-full min-h-100 justify-center py-8">
                   <p className="text-gray-600">로딩중...</p>
                 </div>
               ) : isError ? (
@@ -88,47 +89,47 @@ export default function ScoreListModal({
               ) : (
                 <div className="flex flex-col">
                   {scores?.map((category) => (
-                    <div key={category.categoryType} className="w-full flex flex-col">
-                      <div className="flex justify-between px-5 py-2 bg-gray-50 text-sm font-bold text-gray-500">
+                    <div key={category.categoryType} className="flex w-full flex-col">
+                      <div className="flex justify-between bg-gray-50 px-5 py-2 text-sm font-bold text-gray-500">
                         <p>{category.categoryNames.koreanName}</p>
                       </div>
                       {category.scores.length === 0 ? (
                         <div className="flex justify-center py-4">
                           <p className="text-gray-600">심사 대기 중인 항목이 없습니다</p>
                         </div>
-                      ) : (category.scores.map((score) => (
-                        <article
-                          key={score.scoreId}
-                          className="flex justify-between items-center w-full px-5 py-4 border-b border-gray-100 last:border-none gap-3"
-                        >
-                          <div className="flex items-center gap-3 min-w-0 flex-1">
-                            <div className={cn(
-                              "w-2 h-2 shrink-0 rounded-full",
-                              {
-                                "bg-main-500": score.scoreStatus === "APPROVED",
-                                "bg-gray-600": score.scoreStatus === "PENDING",
-                                "bg-error": score.scoreStatus === "REJECTED"
-                              }
-                            )} />
-                            <p className="text-body2 wrap-break-word overflow-hidden">
-                              {score.activityName || score.categoryNames.koreanName}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-body2 text-black/40 wrap-break-word overflow-hidden">
-                              {formatDate(score.updatedAt)}
-                            </p>
-                          </div>
-                          <Button
-                            variant="border"
-                            className="w-auto px-3 py-0.5 shrink-0"
-                            onClick={() => handleReviewClick(score)}
+                      ) : (
+                        category.scores.map((score) => (
+                          <article
+                            key={score.scoreId}
+                            className="flex w-full items-center justify-between gap-3 border-b border-gray-100 px-5 py-4 last:border-none"
                           >
-                            보기
-                          </Button>
-                        </article>
-                      )))}
-
+                            <div className="flex min-w-0 flex-1 items-center gap-3">
+                              <div
+                                className={cn('h-2 w-2 shrink-0 rounded-full', {
+                                  'bg-main-500': score.scoreStatus === 'APPROVED',
+                                  'bg-gray-600': score.scoreStatus === 'PENDING',
+                                  'bg-error': score.scoreStatus === 'REJECTED',
+                                })}
+                              />
+                              <p className="text-body2 overflow-hidden wrap-break-word">
+                                {score.activityName || score.categoryNames.koreanName}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-body2 overflow-hidden wrap-break-word text-black/40">
+                                {formatDate(score.updatedAt)}
+                              </p>
+                            </div>
+                            <Button
+                              variant="border"
+                              className="w-auto shrink-0 px-3 py-0.5"
+                              onClick={() => handleReviewClick(score)}
+                            >
+                              보기
+                            </Button>
+                          </article>
+                        ))
+                      )}
                     </div>
                   ))}
                 </div>
